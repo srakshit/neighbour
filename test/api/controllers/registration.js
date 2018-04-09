@@ -2,10 +2,10 @@ var should = require("should");
 var request = require("supertest");
 var server = require("../../../app");
 
-describe("controllers", function() {
-  describe("createNeighbour", function() {
-    describe("POST /neighbour", function() {
-      it("should create a neighbour", function(done) {
+describe("controllers", () => {
+  describe("createNeighbour", () => {
+    describe("POST /neighbour", () => {
+      it("should create a neighbour", (done) => {
         request(server)
           .post("/neighbour")
           .send({
@@ -18,15 +18,15 @@ describe("controllers", function() {
           .set("Accept", "application/json")
           .expect("Content-Type", /json/)
           .expect(201)
-          .end(function(err, res) {
+          .end((err, res) => {
             should.not.exist(err);
             res.body.should.eql({message: "Neighbour created!"});
             done();
           });
       });
 
-      describe("should throw error", function() {
-        it("if email is invalid", function(done) {
+      describe("should throw error", () => {
+        it("if email is invalid", (done) => {
           request(server)
             .post("/neighbour")
             .send({
@@ -39,14 +39,14 @@ describe("controllers", function() {
             .set("Accept", "application/json")
             .expect("Content-Type", /json/)
             .expect(400)
-            .end(function(err, res) {
+            .end((err, res) => {
               should.not.exist(err);
               res.body.should.eql({ code: "InvalidContent", message: "email is invalid!" });
               done();
             });
         });
 
-        it("if phone is invalid", function(done) {
+        it("if phone is invalid", (done) => {
           request(server)
             .post("/neighbour")
             .send({
@@ -59,14 +59,14 @@ describe("controllers", function() {
             .set("Accept", "application/json")
             .expect("Content-Type", /json/)
             .expect(400)
-            .end(function(err, res) {
+            .end((err, res) => {
               should.not.exist(err);
               res.body.should.eql({ code: "InvalidContent", message: "phone is invalid!" });
               done();
             });
         });
 
-        it("if postcode is invalid", function(done) {
+        it("if postcode is invalid", (done) => {
           request(server)
             .post("/neighbour")
             .send({
@@ -79,7 +79,7 @@ describe("controllers", function() {
             .set("Accept", "application/json")
             .expect("Content-Type", /json/)
             .expect(400)
-            .end(function(err, res) {
+            .end((err, res) => {
               should.not.exist(err);
               res.body.should.eql({ code: "InvalidContent", message: "postcode is invalid!" });
               done();
