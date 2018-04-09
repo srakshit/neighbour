@@ -15,7 +15,7 @@ SwaggerRestify.create(config, function(err, swaggerRestify) {
 
   swaggerRestify.register(app);
 
-  var port = process.env.PORT || 10010;
+  var port = process.env.PORT || 8080;
   app.listen(port);
 
   if (swaggerRestify.runner.swagger.paths['/hello']) {

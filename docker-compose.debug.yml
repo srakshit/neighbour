@@ -1,0 +1,11 @@
+version: '3.2'
+
+services:
+  app:
+    build: .
+    volumes:
+      - .:/code
+    command: nodemon --inspect=5858
+    ports:
+      - "8000:8000"
+      - "5858:5858"
