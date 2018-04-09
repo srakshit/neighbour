@@ -7,8 +7,6 @@ RUN npm install -g nodemon yarn
 
 COPY . /code
 
-RUN yarn install
-
-EXPOSE 8000
+EXPOSE 8080
 
 CMD ["npm", "start"]

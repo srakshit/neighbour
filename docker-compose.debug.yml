@@ -7,5 +7,5 @@ services:
       - .:/code
     command: nodemon --inspect=5858
     ports:
-      - "8000:8000"
+      - "8080:8080"
       - "5858:5858"

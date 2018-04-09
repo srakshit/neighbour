@@ -7,7 +7,7 @@ describe("controllers", () => {
     describe("POST /neighbour", () => {
       it("should create a neighbour", (done) => {
         request(server)
-          .post("/neighbour")
+          .post("/neighbours")
           .send({
             "name": "Sherlock Holmes",
             "email": "sherlock.holmes@catchernet.com",
@@ -28,7 +28,7 @@ describe("controllers", () => {
       describe("should throw error", () => {
         it("if email is invalid", (done) => {
           request(server)
-            .post("/neighbour")
+            .post("/neighbours")
             .send({
               "name": "Sherlock Holmes",
               "email": "@catchernet.com",
@@ -48,7 +48,7 @@ describe("controllers", () => {
 
         it("if phone is invalid", (done) => {
           request(server)
-            .post("/neighbour")
+            .post("/neighbours")
             .send({
               "name": "Sherlock Holmes",
               "email": "sherlock.holmes@catchernet.com",
@@ -68,7 +68,7 @@ describe("controllers", () => {
 
         it("if postcode is invalid", (done) => {
           request(server)
-            .post("/neighbour")
+            .post("/neighbours")
             .send({
               "name": "Sherlock Holmes",
               "email": "sherlock.holmes@catchernet.com",

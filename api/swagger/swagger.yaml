@@ -18,7 +18,7 @@ consumes:
 produces:
   - application/json
 paths:
-  /neighbour:
+  /neighbours:
     x-swagger-router-controller: registration
     post:
       summary: create a neighbour

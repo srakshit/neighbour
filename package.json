@@ -27,6 +27,7 @@
     "mocha-jenkins-reporter": "^0.2.2"
   },
   "scripts": {
+    "prestart": "if [ ! -d node_modules ]; then yarn install --no-bin-links; fi",
     "start": "node app.js",
     "test": "swagger project test"
   }
