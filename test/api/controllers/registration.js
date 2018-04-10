@@ -8,7 +8,7 @@ var neighbours = require('../../../db/neighbours');
 describe('controllers', () => {
   describe('addNeighbour', () => {
     describe('POST /neighbours', () => {
-      describe('', () => {
+      describe('happy path', () => {
         //Cleanup
         after(() => neighbours.deleteByPhone('07777777777').then());
 
@@ -33,7 +33,7 @@ describe('controllers', () => {
         });
       });
 
-      describe('should throw error', () => {
+      describe('error paths', () => {
         //Setup
         before(() => {
           neighbours.add({
@@ -48,7 +48,7 @@ describe('controllers', () => {
         //Teardown
         after(() => neighbours.deleteByPhone('07777777777').then());
 
-        it('if phone is alphanumeric', (done) => {
+        it('should throw error if phone is alphanumeric', (done) => {
           request(server)
             .post('/neighbours')
             .send({
@@ -68,7 +68,7 @@ describe('controllers', () => {
             });
         });
 
-        it('if neighbour with same email exists', (done) => {
+        it('should throw error if neighbour with same email exists', (done) => {
           request(server)
             .post('/neighbours')
             .send({
@@ -88,7 +88,7 @@ describe('controllers', () => {
             });
         });
 
-        it('if neighbour with same phone exists', (done) => {
+        it('should throw error if neighbour with same phone exists', (done) => {
           request(server)
             .post('/neighbours')
             .send({
