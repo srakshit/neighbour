@@ -31,6 +31,7 @@ paths:
       parameters:
       - in: body
         name: NeighbourDetails
+        required: true
         description: Neighbour to add
         schema:
           $ref: '#/definitions/NeighbourDetails'
@@ -89,18 +90,25 @@ definitions:
     properties:
       name:
         type: string
+        minLength: 1
         example: Sherlock Holmes
       email:
         type: string
+        format: email
         example: sherlock.holmes@detective.com
       phone:
         type: string
-        example: (+44)-777777777
+        minLength: 11
+        maxLength: 11
+        example: 0123456789
       address:
         type: string
+        minLength: 1
         example: 221B Baker Steeet, London
       postcode:
         type: string
+        minLength: 6
+        maxLength: 7
         example: SW19 01B
   HelloWorldResponse:
     required:

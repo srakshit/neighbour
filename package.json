@@ -8,15 +8,13 @@
   "license": "",
   "main": "app.js",
   "dependencies": {
+    "npm-check-updates": "2.14.1",
     "restify": "^4.0.2",
     "restify-errors": "^6.0.0",
-    "swagger-restify-mw": "^0.1.0",
-    "validator": "^9.4.1",
-    "npm-check-updates": "2.14.1"
+    "swagger-restify-mw": "^0.1.0"
   },
   "devDependencies": {
-    "should": "^7.1.0",
-    "supertest": "^1.0.0",
+    "eslint": "^4.19.1",
     "grunt": "^1.0.1",
     "grunt-contrib-jshint": "^1.0.0",
     "grunt-contrib-watch": "^1.0.0",
@@ -24,7 +22,9 @@
     "grunt-mocha-test": "^0.12.7",
     "istanbul": "^0.4.3",
     "mocha": "^2.4.5",
-    "mocha-jenkins-reporter": "^0.2.2"
+    "mocha-jenkins-reporter": "^0.2.2",
+    "should": "^7.1.0",
+    "supertest": "^1.0.0"
   },
   "scripts": {
     "prestart": "if [ ! -d node_modules ]; then yarn install --no-bin-links; fi",
