@@ -1,6 +1,7 @@
 DROP DATABASE IF EXISTS catchernet;
 CREATE DATABASE catchernet;
 
+/*
 \c catchernet;
 
 CREATE TABLE neighbour (
@@ -11,3 +12,4 @@ CREATE TABLE neighbour (
    address VARCHAR,
    postcode CHAR(8)
 );
+*/

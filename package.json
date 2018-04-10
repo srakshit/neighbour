@@ -8,7 +8,9 @@
   "license": "",
   "main": "app.js",
   "dependencies": {
+    "knex": "^0.14.5",
     "npm-check-updates": "2.14.1",
+    "pg": "^7.4.1",
     "restify": "^4.0.2",
     "restify-errors": "^6.0.0",
     "swagger-restify-mw": "^0.1.0"

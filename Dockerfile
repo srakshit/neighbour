@@ -3,7 +3,7 @@ FROM node:8.10.0
 WORKDIR /code
 
 #Only required for debugging
-RUN npm install -g nodemon yarn
+RUN npm install -g nodemon yarn knex
 
 COPY . /code
 

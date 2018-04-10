@@ -21,9 +21,9 @@ paths:
   /neighbours:
     x-swagger-router-controller: registration
     post:
-      summary: create a neighbour
-      operationId: createNeighbour
-      description: Create a neighbour to the system
+      summary: add a neighbour
+      operationId: addNeighbour
+      description: Add a neighbour to the system
       consumes:
       - application/json
       produces:
@@ -32,12 +32,12 @@ paths:
       - in: body
         name: NeighbourDetails
         required: true
-        description: Neighbour to add
+        description: Add Neighbour
         schema:
-          $ref: '#/definitions/NeighbourDetails'
+          $ref: '#/definitions/Neighbour'
       responses:
         201:
-          description: neighbour created
+          description: neighbour added
           schema:
             # a pointer to a definition
             $ref: "#/definitions/SuccessResponse"
@@ -79,7 +79,7 @@ paths:
     x-swagger-pipe: swagger_raw
 # complex objects have schema definitions
 definitions:
-  NeighbourDetails:
+  Neighbour:
     type: object
     required:
     - name
