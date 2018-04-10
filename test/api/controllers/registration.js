@@ -3,47 +3,107 @@
 var should = require('should');
 var request = require('supertest');
 var server = require('../../../app');
+var neighbours = require('../../../db/neighbours');
 
 describe('controllers', () => {
   describe('addNeighbour', () => {
     describe('POST /neighbours', () => {
-      it('should add a neighbour', (done) => {
-        request(server)
-          .post('/neighbours')
-          .send({
+      describe('', () => {
+        //Cleanup
+        after(() => neighbours.deleteByPhone('07777777777').then());
+
+        it('should add a neighbour', (done) => {
+          request(server)
+            .post('/neighbours')
+            .send({
+              'name': 'test',
+              'email': 'test@test.com',
+              'phone': '07777777777',
+              'address': 'test',
+              'postcode': 'WA37HX'
+            })
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(201)
+            .end((err, res) => {
+              should.not.exist(err);
+              res.body.should.eql({message: 'Neighbour test added!'});
+              done();
+            });
+        });
+      });
+
+      describe('should throw error', () => {
+        //Setup
+        before(() => {
+          neighbours.add({
             'name': 'test',
             'email': 'test@test.com',
             'phone': '07777777777',
             'address': 'test',
-            'postcode': 'SW192JG'
-          })
-          .set('Accept', 'application/json')
-          .expect('Content-Type', /json/)
-          .expect(201)
-          .end((err, res) => {
-            should.not.exist(err);
-            res.body.should.eql({message: 'Neighbour test added!'});
-            done();
-          });
-      });
+            'postcode': 'WA37HX'
+          }).then();
+        });
 
-      describe('should throw error', () => {
+        //Teardown
+        after(() => neighbours.deleteByPhone('07777777777').then());
+
         it('if phone is alphanumeric', (done) => {
           request(server)
             .post('/neighbours')
             .send({
-              'name': 'abcd',
-              'email': 'abcd@catchernet.com',
+              'name': 'test',
+              'email': 'test@test.com',
               'phone': 'abcdefghijk',
-              'address': '221B Baker Street',
-              'postcode': 'SW192JG'
+              'address': 'test',
+              'postcode': 'WA37HX'
             })
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
             .expect(400)
             .end((err, res) => {
               should.not.exist(err);
-              res.body.should.eql({ code: 'InvalidContent', message: 'phone can\'t be alphanumeric!' });
+              res.body.should.eql({ code: 'InvalidContent', message: 'phone number can\'t be alphanumeric!' });
+              done();
+            });
+        });
+
+        it('if neighbour with same email exists', (done) => {
+          request(server)
+            .post('/neighbours')
+            .send({
+              'name': 'test',
+              'email': 'test@test.com',
+              'phone': '07777777777',
+              'address': 'test',
+              'postcode': 'WA37HX'
+            })
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(409)
+            .end((err, res) => {
+              should.not.exist(err);
+              res.body.should.eql({ code: 'Conflict', message: 'Neighbour with same email exists!' });
+              done();
+            });
+        });
+
+        it('if neighbour with same phone exists', (done) => {
+          request(server)
+            .post('/neighbours')
+            .send({
+              'name': 'test',
+              'email': 'test1@test.com',
+              'phone': '07777777777',
+              'address': 'test',
+              'postcode': 'WA37HX'
+            })
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(409)
+            .end((err, res) => {
+              should.not.exist(err);
+              res.body.should.eql({ code: 'Conflict', message: 'Neighbour with same phone number exists!' });
               done();
             });
         });

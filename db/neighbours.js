@@ -22,9 +22,14 @@ function add(neighbour) {
     return Neighbours().insert(neighbour, 'id');
 }
 
+function deleteByPhone(phone) {
+    return Neighbours().where('phone', phone).del();
+}
+
 module.exports = {
     getAll: getAll,
     getByPhone: getByPhone,   
     getById: getById, 
-    add: add
+    add: add,
+    deleteByPhone: deleteByPhone
 };

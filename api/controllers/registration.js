@@ -11,7 +11,7 @@ function addNeighbour(req, res, next) {
     let neighbour = req.swagger.params.Neighbour.value;
 
     if (new RegExp(/[a-zA-Z]/).test(neighbour.phone)) {
-        return next(new errs.InvalidContentError('phone can\'t be alphanumeric!'));
+        return next(new errs.InvalidContentError('phone number can\'t be alphanumeric!'));
     }
 
     neighbours.add(neighbour)
