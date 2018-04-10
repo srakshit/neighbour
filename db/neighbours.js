@@ -10,16 +10,21 @@ function getAll() {
     return Neighbours().select();
 }
 
-function getSingle(phone) {
+function getByPhone(phone) {
     return Neighbours().where('phone', phone).first();
 }
 
+function getById(id) {
+    return Neighbours().where('id', id).first();
+}
+
 function add(neighbour) {
-    return Neighbours.insert(neighbour, 'id');
+    return Neighbours().insert(neighbour, 'id');
 }
 
 module.exports = {
     getAll: getAll,
-    getSingle: getSingle,
+    getByPhone: getByPhone,   
+    getById: getById, 
     add: add
 };

@@ -30,7 +30,7 @@ paths:
       - application/json
       parameters:
       - in: body
-        name: NeighbourDetails
+        name: Neighbour
         required: true
         description: Add Neighbour
         schema:

@@ -11,10 +11,10 @@ describe('controllers', () => {
         request(server)
           .post('/neighbours')
           .send({
-            'name': 'Sherlock Holmes',
-            'email': 'sherlock.holmes@catchernet.com',
-            'phone': '07845678903',
-            'address': '221B Baker Street',
+            'name': 'test',
+            'email': 'test@test.com',
+            'phone': '07777777777',
+            'address': 'test',
             'postcode': 'SW192JG'
           })
           .set('Accept', 'application/json')
@@ -22,7 +22,7 @@ describe('controllers', () => {
           .expect(201)
           .end((err, res) => {
             should.not.exist(err);
-            res.body.should.eql({message: 'Neighbour added!'});
+            res.body.should.eql({message: 'Neighbour test added!'});
             done();
           });
       });

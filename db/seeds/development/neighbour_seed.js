@@ -1,6 +1,6 @@
 'use strict';
 
-exports.seed = function(knex, Promise) {
+exports.seed = (knex) => {
   return knex('neighbours').del()
     .then(function () {
       return knex('neighbours').insert([

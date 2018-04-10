@@ -1,6 +1,6 @@
 'use strict';
 
-exports.up = function(knex) {
+exports.up = (knex) => {
     return knex.schema.createTable('neighbours', (table) => {
         table.increments();
         table.string('name').notNullable();
@@ -11,6 +11,6 @@ exports.up = function(knex) {
     });
 };
 
-exports.down = function(knex) {
+exports.down = (knex) => {
     return knex.schema.dropTable('neighbours');
 };
