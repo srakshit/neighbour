@@ -34,6 +34,8 @@ function createNeighbour(req, res, next) {
         }
     }
     
+    //TODO: Add neighbour to DB
+
     res.send(201, {message: "Neighbour created!"});
     return next();
 }
