@@ -18,7 +18,5 @@ SwaggerRestify.create(config, function(err, swaggerRestify) {
   var port = process.env.PORT || 8080;
   app.listen(port);
 
-  if (swaggerRestify.runner.swagger.paths['/hello']) {
-    console.log('try this:\ncurl http://127.0.0.1:' + port + '/hello?name=Scott');
-  }
+  console.log('Application listening at port' + port);
 });

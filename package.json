@@ -1,8 +1,8 @@
 {
-  "name": "catcher",
+  "name": "neighbour",
   "version": "0.0.1",
   "private": true,
-  "description": "New Swagger API Project",
+  "description": "Neighbour Service API",
   "keywords": [],
   "author": "",
   "license": "",
