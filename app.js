@@ -18,5 +18,5 @@ SwaggerRestify.create(config, function(err, swaggerRestify) {
   var port = process.env.PORT || 8081;
   app.listen(port);
 
-  console.log('Application listening at port' + port);
+  console.log('Neighbour Service listening on port' + port);
 });
