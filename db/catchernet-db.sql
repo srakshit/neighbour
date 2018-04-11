@@ -1,0 +1,2 @@
+DROP DATABASE IF EXISTS catchernet;
+CREATE DATABASE catchernet;
