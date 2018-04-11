@@ -17,3 +17,5 @@ docs/*
 checkstyle-result.xml
 coverage.*
 junit.xml
+
+:memory

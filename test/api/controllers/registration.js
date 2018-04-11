@@ -74,7 +74,7 @@ describe('controllers', () => {
             .send({
               'name': 'test',
               'email': 'test@test.com',
-              'phone': '07777777777',
+              'phone': '07777777778',
               'address': 'test',
               'postcode': 'WA37HX'
             })

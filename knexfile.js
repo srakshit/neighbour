@@ -2,7 +2,16 @@
 
 module.exports = {
 
-  development: {
+  local : {
+    client: 'sqlite3',
+    connection: { filename: ':memory'},
+    useNullAsDefault: true,
+    migrations: {
+        directory: __dirname + '/db/migrations'
+    }
+  },
+
+  dev: {
     client: 'pg',
     connection: {
       host: process.env.PG_HOST,

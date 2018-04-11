@@ -1,6 +1,6 @@
 'use strict';
 
-var knex = require('./knex.js');
+let knex = require('./knex.js');
 
 function Neighbours() {
     return knex('neighbours');

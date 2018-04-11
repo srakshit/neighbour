@@ -20,13 +20,15 @@ function addNeighbour(req, res, next) {
             return next();
         })
         .catch((err) => {
-            if (new RegExp(/duplicate key value violates unique constraint/).test(err)) {
-                if (new RegExp(/neighbours_email_unique/).test(err)) {
+            let errMsg = err.message.toLowerCase();
+            if (new RegExp(/unique constraint/).test(errMsg)) {
+                if (new RegExp(/neighbours.email/).test(errMsg) || new RegExp(/neighbours_email_unique/).test(err)) {
                     return next(new errs.ConflictError('Neighbour with same email exists!'));
-                } else {
+                } 
+                if (new RegExp(/neighbours.phone/).test(errMsg) || new RegExp(/neighbours_phone_unique/).test(err)) {
                     return next(new errs.ConflictError('Neighbour with same phone number exists!'));
                 }
             }
-            return next(new errs.InternalServerError(err, 'Failed to create neighbour!'));
+            return next(new errs.InternalServerError(err.message, 'Failed to create neighbour!'));
         });
 }
