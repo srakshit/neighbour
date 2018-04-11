@@ -6,7 +6,7 @@ services:
     volumes:
       - .:/code
     ports:
-      - "8000:8080"
+      - "8001:8081"
 
   postgres:
     image: postgres
