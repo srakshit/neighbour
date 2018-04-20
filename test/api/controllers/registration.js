@@ -25,7 +25,8 @@ describe('controllers', () => {
               'email': 'test@test.com',
               'phone': '07777777777',
               'address': 'test',
-              'postcode': 'WA37HX'
+              'postcode': 'WA37HX',
+              'type': 'S'
             })
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
@@ -47,7 +48,8 @@ describe('controllers', () => {
             'email': 'test@test.com',
             'phone': '07777777777',
             'address': 'test',
-            'postcode': 'WA37HX'
+            'postcode': 'WA37HX',
+            'type': 'S'
           }).then();
         });
 
@@ -78,7 +80,7 @@ describe('controllers', () => {
             });
         });
 
-        it('should throw error if subscriber with same email exists', (done) => {
+        it('should throw error if user with same email exists', (done) => {
           request(server)
             .post('/subscribers')
             .send({
@@ -94,12 +96,12 @@ describe('controllers', () => {
             .expect(409)
             .end((err, res) => {
               should.not.exist(err);
-              res.body.should.eql({ code: 'Conflict', message: 'Subscriber with same email exists!' });
+              res.body.should.eql({ code: 'Conflict', message: 'User with same email exists!' });
               done();
             });
         });
 
-        it('should throw error if subscriber with same phone exists', (done) => {
+        it('should throw error if user with same phone exists', (done) => {
           request(server)
             .post('/subscribers')
             .send({
@@ -115,7 +117,7 @@ describe('controllers', () => {
             .expect(409)
             .end((err, res) => {
               should.not.exist(err);
-              res.body.should.eql({ code: 'Conflict', message: 'Subscriber with same phone number exists!' });
+              res.body.should.eql({ code: 'Conflict', message: 'User with same phone number exists!' });
               done();
             });
         });
