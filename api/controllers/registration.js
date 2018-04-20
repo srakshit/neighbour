@@ -4,10 +4,6 @@ var errs = require('restify-errors');
 var subscribers = require('../../db/subscribers');
 var users = require('../../db/users');
 
-module.exports = {
-    addSubscriber: addSubscriber
-};
-
 function addSubscriber(req, res, next) {
     let user = req.swagger.params.Subscriber.value;
     user.type = 'S';
@@ -49,3 +45,26 @@ function addSubscriber(req, res, next) {
             return next(new errs.InternalServerError(err.message, 'Failed to create subscriber!'));
         });
 }
+
+function getSubscriber(req, res, next) {
+    let id = req.swagger.params.id.value;
+    
+    subscribers.getById(id)
+        .then((subscriber) => {
+            if (subscriber) {
+                res.send(200, subscriber);
+                return next();
+            }else {
+                return next(new errs.NotFoundError('No matching subscriber found'))
+            }
+        })
+        .catch((err) => {
+            return next(new errs.InternalServerError(err.message, 'Failed to create subscriber!'));
+        });
+}
+
+
+module.exports = {
+    addSubscriber: addSubscriber,
+    getSubscriber: getSubscriber
+};

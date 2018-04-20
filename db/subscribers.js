@@ -13,6 +13,13 @@ function getByEmail(email) {
             .first();
 }
 
+function getById(id) {
+    return Subscribers()
+            .innerJoin('users', 'subscribers.user_id', 'users.id')
+            .where('id', id)
+            .first();
+}
+
 function add(subscriber) {
     return Subscribers().insert(subscriber, 'subscriber_id');
 }
@@ -23,6 +30,7 @@ function deleteById(id) {
 
 module.exports = {
     getByEmail: getByEmail,
+    getById: getById,
     add: add,
     deleteById: deleteById
 };
