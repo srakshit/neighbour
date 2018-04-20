@@ -1,34 +1,50 @@
 'use strict';
 
 var errs = require('restify-errors');
-var neighbours = require('../../db/neighbours');
+var subscribers = require('../../db/subscribers');
+var users = require('../../db/users');
 
 module.exports = {
-    addNeighbour: addNeighbour
+    addSubscriber: addSubscriber
 };
 
-function addNeighbour(req, res, next) {
-    let neighbour = req.swagger.params.Neighbour.value;
+function addSubscriber(req, res, next) {
+    let user = req.swagger.params.Subscriber.value;
 
-    if (new RegExp(/[a-zA-Z]/).test(neighbour.phone)) {
+    if (new RegExp(/[a-zA-Z]/).test(user.phone)) {
         return next(new errs.InvalidContentError('phone number can\'t be alphanumeric!'));
     }
 
-    neighbours.add(neighbour)
-        .then(() => {
-            res.send(201, {message: 'Neighbour ' + neighbour.name + ' added!'});
-            return next();
+    users.add(user)
+        .then((id) => {
+            let subscriber = {
+                user_id: parseInt(id),
+                subscriber_id: 'SUBSCRIBER_'+id
+            };
+            
+            subscribers.add(subscriber)
+                    .then((id) => {
+                        res.send(201, {message: 'Subscriber ' + user.firstName + ' ' + user.lastName + ' added!', id: id[0]});
+                        return next();
+                    })
+                    .catch((err) => {
+                        //TODO: Test this flow
+                        let errMsg = err.message.toLowerCase();
+                        users.deleteByEmail(user.email).then();
+                        return next(new errs.InternalServerError(err.message, 'Failed to create subscriber!'));
+                    });
+            
         })
         .catch((err) => {
             let errMsg = err.message.toLowerCase();
             if (new RegExp(/unique constraint/).test(errMsg)) {
-                if (new RegExp(/neighbours.email/).test(errMsg) || new RegExp(/neighbours_email_unique/).test(err)) {
-                    return next(new errs.ConflictError('Neighbour with same email exists!'));
+                if (new RegExp(/users.email/).test(errMsg) || new RegExp(/users_email_unique/).test(err)) {
+                    return next(new errs.ConflictError('Subscriber with same email exists!'));
                 } 
-                if (new RegExp(/neighbours.phone/).test(errMsg) || new RegExp(/neighbours_phone_unique/).test(err)) {
-                    return next(new errs.ConflictError('Neighbour with same phone number exists!'));
+                if (new RegExp(/users.phone/).test(errMsg) || new RegExp(/users_phone_unique/).test(err)) {
+                    return next(new errs.ConflictError('Subscriber with same phone number exists!'));
                 }
             }
-            return next(new errs.InternalServerError(err.message, 'Failed to create neighbour!'));
+            return next(new errs.InternalServerError(err.message, 'Failed to create subscriber!'));
         });
 }

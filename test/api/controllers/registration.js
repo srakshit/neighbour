@@ -3,20 +3,25 @@
 var should = require('should');
 var request = require('supertest');
 var server = require('../../../app');
-var neighbours = require('../../../db/neighbours');
+var users = require('../../../db/users');
+var subscribers = require('../../../db/subscribers');
 
 describe('controllers', () => {
-  describe('addNeighbour', () => {
-    describe('POST /neighbours', () => {
+  describe('addSubscriber', () => {
+    describe('POST /subscribers', () => {
       describe('happy path', () => {
         //Cleanup
-        after(() => neighbours.deleteByPhone('07777777777').then());
+        after(() => 
+          users.getByEmail('test@test.com')
+                .then((user) => subscribers.deleteById(user.id))
+                .then(() => users.deleteByEmail('test@test.com').then()));
 
-        it('should add a neighbour', (done) => {
+        it('should add a subscriber', (done) => {
           request(server)
-            .post('/neighbours')
+            .post('/subscribers')
             .send({
-              'name': 'test',
+              'firstName': 'test',
+              'lastName': 'test',
               'email': 'test@test.com',
               'phone': '07777777777',
               'address': 'test',
@@ -27,7 +32,7 @@ describe('controllers', () => {
             .expect(201)
             .end((err, res) => {
               should.not.exist(err);
-              res.body.should.eql({message: 'Neighbour test added!'});
+              res.body.message.should.eql('Subscriber test test added!');
               done();
             });
         });
@@ -36,8 +41,9 @@ describe('controllers', () => {
       describe('error paths', () => {
         //Setup
         before(() => {
-          neighbours.add({
-            'name': 'test',
+          users.add({
+            'firstName': 'test',
+            'lastName': 'test',
             'email': 'test@test.com',
             'phone': '07777777777',
             'address': 'test',
@@ -46,13 +52,17 @@ describe('controllers', () => {
         });
 
         //Teardown
-        after(() => neighbours.deleteByPhone('07777777777').then());
+        after(() => 
+          users.getByEmail('test@test.com')
+                .then((user) => subscribers.deleteById(user.id))
+                .then(() => users.deleteByEmail('test@test.com').then()));
 
         it('should throw error if phone is alphanumeric', (done) => {
           request(server)
-            .post('/neighbours')
+            .post('/subscribers')
             .send({
-              'name': 'test',
+              'firstName': 'test',
+              'lastName': 'test',
               'email': 'test@test.com',
               'phone': 'abcdefghijk',
               'address': 'test',
@@ -68,11 +78,12 @@ describe('controllers', () => {
             });
         });
 
-        it('should throw error if neighbour with same email exists', (done) => {
+        it('should throw error if subscriber with same email exists', (done) => {
           request(server)
-            .post('/neighbours')
+            .post('/subscribers')
             .send({
-              'name': 'test',
+              'firstName': 'test',
+              'lastName': 'test',
               'email': 'test@test.com',
               'phone': '07777777778',
               'address': 'test',
@@ -83,16 +94,17 @@ describe('controllers', () => {
             .expect(409)
             .end((err, res) => {
               should.not.exist(err);
-              res.body.should.eql({ code: 'Conflict', message: 'Neighbour with same email exists!' });
+              res.body.should.eql({ code: 'Conflict', message: 'Subscriber with same email exists!' });
               done();
             });
         });
 
-        it('should throw error if neighbour with same phone exists', (done) => {
+        it('should throw error if subscriber with same phone exists', (done) => {
           request(server)
-            .post('/neighbours')
+            .post('/subscribers')
             .send({
-              'name': 'test',
+              'firstName': 'test',
+              'lastName': 'test',
               'email': 'test1@test.com',
               'phone': '07777777777',
               'address': 'test',
@@ -103,7 +115,7 @@ describe('controllers', () => {
             .expect(409)
             .end((err, res) => {
               should.not.exist(err);
-              res.body.should.eql({ code: 'Conflict', message: 'Neighbour with same phone number exists!' });
+              res.body.should.eql({ code: 'Conflict', message: 'Subscriber with same phone number exists!' });
               done();
             });
         });
