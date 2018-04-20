@@ -18,7 +18,7 @@ describe('controllers', () => {
 
         it('should add a subscriber', (done) => {
           request(server)
-            .post('/subscribers')
+            .post('/api/v1/subscribers')
             .send({
               'firstName': 'test',
               'lastName': 'test',
@@ -61,7 +61,7 @@ describe('controllers', () => {
 
         it('should throw error if phone is alphanumeric', (done) => {
           request(server)
-            .post('/subscribers')
+            .post('/api/v1/subscribers')
             .send({
               'firstName': 'test',
               'lastName': 'test',
@@ -82,7 +82,7 @@ describe('controllers', () => {
 
         it('should throw error if user with same email exists', (done) => {
           request(server)
-            .post('/subscribers')
+            .post('/api/v1/subscribers')
             .send({
               'firstName': 'test',
               'lastName': 'test',
@@ -103,7 +103,7 @@ describe('controllers', () => {
 
         it('should throw error if user with same phone exists', (done) => {
           request(server)
-            .post('/subscribers')
+            .post('/api/v1/subscribers')
             .send({
               'firstName': 'test',
               'lastName': 'test',
