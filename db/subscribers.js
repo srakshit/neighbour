@@ -1,6 +1,11 @@
 'use strict';
 
-let knex = require('./knex.js');
+const _ = require('lodash');
+const knex = require('./knex.js');
+
+function Users() {
+    return knex('users');
+}
 
 function Subscribers() {
     return knex('subscribers');
@@ -20,17 +25,41 @@ function getById(id) {
             .first();
 }
 
-function add(subscriber) {
-    return Subscribers().insert(subscriber, 'subscriber_id');
+function add(subscriber, subscriberIdPrefix) {  
+    return knex.transaction(function (t) {
+        return Users()
+            .transacting(t)
+            .insert(subscriber, 'id')
+            .then(function (id) {
+                return Subscribers()
+                    .transacting(t)
+                    .insert({subscriber_id: subscriberIdPrefix + _.padStart(id[0], 6, '0'), user_id: id[0]})
+            }, 'subscriber_id')
+            .then(t.commit)
+            .catch(t.rollback)
+    });
 }
 
-function deleteById(id) {
-    return Subscribers().where('user_id', id).del();
+function deleteByUserId(id) {
+    return knex.transaction(function (t) {
+        return Subscribers()
+            .transacting(t)
+            .del()
+            .where('user_id', id)
+            .then(function (response) {
+                return Users()
+                    .transacting(t)
+                    .del()
+                    .where('id', id)
+            })
+            .then(t.commit)
+            .catch(t.rollback)
+    });
 }
 
 module.exports = {
     getByEmail: getByEmail,
     getById: getById,
     add: add,
-    deleteById: deleteById
+    deleteByUserId: deleteByUserId
 };

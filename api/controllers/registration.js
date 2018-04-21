@@ -2,35 +2,21 @@
 
 var errs = require('restify-errors');
 var subscribers = require('../../db/subscribers');
-var users = require('../../db/users');
 
 function addSubscriber(req, res, next) {
-    let user = req.swagger.params.Subscriber.value;
-    user.type = 'S';
+    let subscriber = req.swagger.params.Subscriber.value;
+    subscriber.type = 'S';
 
-    if (new RegExp(/[a-zA-Z]/).test(user.phone)) {
+    if (new RegExp(/[a-zA-Z]/).test(subscriber.phone)) {
         return next(new errs.InvalidContentError('phone number can\'t be alphanumeric!'));
     }
 
-    users.add(user)
+    let subscriberIdPrefix = subscriber.lastName.substr(0, 1).toUpperCase() + subscriber.firstName.substr(0, 1).toUpperCase() + subscriber.postcode.toUpperCase();
+
+    subscribers.add(subscriber, subscriberIdPrefix)
         .then((id) => {
-            let subscriber = {
-                user_id: parseInt(id),
-                subscriber_id: 'SUBSCRIBER_'+id
-            };
-            
-            subscribers.add(subscriber)
-                    .then((id) => {
-                        res.send(201, {message: 'Subscriber ' + user.firstName + ' ' + user.lastName + ' added!', id: id[0]});
-                        return next();
-                    })
-                    .catch((err) => {
-                        //TODO: Test this flow
-                        let errMsg = err.message.toLowerCase();
-                        users.deleteByEmail(user.email).then();
-                        return next(new errs.InternalServerError(err.message, 'Failed to create subscriber!'));
-                    });
-            
+            res.send(201, {message: 'Subscriber ' + subscriber.firstName + ' ' + subscriber.lastName + ' added!', id: id[0]});
+            return next();
         })
         .catch((err) => {
             let errMsg = err.message.toLowerCase();
