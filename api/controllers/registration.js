@@ -4,7 +4,7 @@ var errs = require('restify-errors');
 var subscribers = require('../../db/subscribers');
 
 function addSubscriber(req, res, next) {
-    let subscriber = req.swagger.params.Subscriber.value;
+    let subscriber = req.swagger.params.subscriber.value;
     subscriber.type = 'S';
 
     if (new RegExp(/[a-zA-Z]/).test(subscriber.phone)) {
@@ -28,7 +28,8 @@ function addSubscriber(req, res, next) {
                     return next(new errs.ConflictError('User with same phone number exists!'));
                 }
             }
-            return next(new errs.InternalServerError(err.message, 'Failed to create subscriber!'));
+            //TODO: Test code path
+            return next(new errs.InternalError(err.message, 'Failed to create subscriber!'));
         });
 }
 
@@ -41,11 +42,12 @@ function getSubscriber(req, res, next) {
                 res.send(200, subscriber);
                 return next();
             }else {
-                return next(new errs.NotFoundError('No matching subscriber found'))
+                return next(new errs.ResourceNotFoundError('No matching subscriber found!'))
             }
         })
         .catch((err) => {
-            return next(new errs.InternalServerError(err.message, 'Failed to create subscriber!'));
+            //TODO: Test code path
+            return next(new errs.InternalError(err.message, 'Failed to create subscriber!'));
         });
 }
 

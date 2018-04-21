@@ -21,7 +21,7 @@ function getByEmail(email) {
 function getById(id) {
     return Subscribers()
             .innerJoin('users', 'subscribers.user_id', 'users.id')
-            .where('id', id)
+            .where('subscriber_id', id)
             .first();
 }
 
@@ -33,8 +33,8 @@ function add(subscriber, subscriberIdPrefix) {
             .then(function (id) {
                 return Subscribers()
                     .transacting(t)
-                    .insert({subscriber_id: subscriberIdPrefix + _.padStart(id[0], 6, '0'), user_id: id[0]})
-            }, 'subscriber_id')
+                    .insert({subscriber_id: subscriberIdPrefix + _.padStart(id[0], 6, '0'), user_id: id[0]}, 'subscriber_id')
+            })
             .then(t.commit)
             .catch(t.rollback)
     });

@@ -53,7 +53,7 @@ paths:
       - application/json
       parameters:
       - in: body
-        name: Subscriber
+        name: subscriber
         required: true
         description: Add Subscriber
         schema:
