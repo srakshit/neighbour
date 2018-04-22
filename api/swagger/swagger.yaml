@@ -209,8 +209,8 @@ definitions:
         example: true
       stripeCustomerId:
         type: string
-        minLength: 6
-        maxLength: 9
+        minLength: 18
+        maxLength: 18
         description: Subscriber Stripe customer ID
         example: true
   SuccessResponse:
