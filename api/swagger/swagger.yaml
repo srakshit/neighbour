@@ -136,7 +136,8 @@ definitions:
       postcode:
         type: string
         minLength: 6
-        maxLength: 7
+        maxLength: 9
+        description: Postcode without spaces
         example: SW19 01B
   SuccessResponse:
     required:
