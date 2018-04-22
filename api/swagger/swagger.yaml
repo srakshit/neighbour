@@ -81,7 +81,7 @@ paths:
         required: true
         description: Add Subscriber
         schema:
-          $ref: '#/definitions/Subscriber'
+          $ref: '#/definitions/AddSubscriber'
       responses:
         201:
           description: subscriber added
@@ -98,11 +98,38 @@ paths:
           schema:
             # a pointer to a definition
             $ref: "#/definitions/ErrorResponse"
+    
+    put:
+      summary: Update an existing subscriber
+      operationId: updateSubscriber
+      description: Update an existing subscriber
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: subscriber
+        required: true
+        description: Update Subscriber
+        schema:
+          $ref: '#/definitions/UpdateSubscriber'
+      responses:
+        204:
+          description: Subscriber updated
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/SuccessResponse"
+        400:
+          description: Invalid subscriber id provided
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/ErrorResponse"
   /swagger:
     x-swagger-pipe: swagger_raw
 # complex objects have schema definitions
 definitions:
-  Subscriber:
+  AddSubscriber:
     type: object
     required:
     - firstName
@@ -139,6 +166,53 @@ definitions:
         maxLength: 9
         description: Postcode without spaces
         example: SW19 01B
+  UpdateSubscriber:
+    type: object
+    required:
+    - id
+    - email
+    properties:
+      id:
+        type: string
+        minLength: 12
+        example: CRS7GA000001
+      firstName:
+        type: string
+        minLength: 1
+        example: Sherlock
+      lastName:
+        type: string
+        minLength: 1
+        example: Holmes
+      email:
+        type: string
+        format: email
+        example: sherlock.holmes@detective.com
+      phone:
+        type: string
+        minLength: 11
+        maxLength: 11
+        example: 0123456789
+      address:
+        type: string
+        minLength: 1
+        example: 221B Baker Steeet, London
+      postcode:
+        type: string
+        minLength: 6
+        maxLength: 9
+        description: Postcode without spaces
+        example: SW19 01B
+      isActive:
+        type: boolean
+        description: Subscriber status (active/inactive)
+        example: true
+      stripeCustomerId:
+        type: string
+        minLength: 6
+        maxLength: 9
+        description: Subscriber Stripe customer ID
+        example: true
   SuccessResponse:
     required:
       - message

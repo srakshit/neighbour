@@ -242,4 +242,120 @@ describe('controllers', () => {
             });
         });
     });
+
+    describe('PUT /subscribers', () => {
+        //Cleanup
+        afterEach(() => 
+            subscribers.getByEmail('test@test.com')
+                .then((subscriber) => subscribers.deleteByUserId(subscriber.id).then()));
+
+        describe('happy path', () => {
+            it('should update a subscriber when all fields are provided', (done) => {
+                subscribers.add({
+                    'firstName': 'test',
+                    'lastName': 'test',
+                    'email': 'test@test.com',
+                    'phone': '07777777777',
+                    'address': 'test',
+                    'postcode': 'WA37HX',
+                    'type': 'S'
+                }, 'CTT7HX').then((id) => {
+                    request(server)
+                        .put('/api/v1/subscribers')
+                        .send({
+                            'id': id[0],
+                            'firstName': 'test1',
+                            'lastName': 'test1',
+                            'email': 'test@test.com',
+                            'phone': '07777777778',
+                            'address': 'test1',
+                            'postcode': 'WA27GA',
+                            'isActive' : false
+                        })
+                        .set('Accept', 'application/json')
+                        .expect(204)
+                        .end((err, res) => {
+                            should.not.exist(err);
+                            subscribers.getByEmail('test@test.com')
+                                    .then((subscriber) => {
+                                        subscriber.firstName.should.eql('test1');
+                                        subscriber.lastName.should.eql('test1');
+                                        subscriber.phone.should.eql('07777777778');
+                                        subscriber.address.should.eql('test1');
+                                        subscriber.postcode.should.eql('WA27GA');
+                                        subscriber.isActive.should.eql(false);
+                                        done();
+                                    })
+                        });
+
+                });
+            });
+
+            it('should update a subscriber when few personal detail fields are upadted', (done) => {
+                subscribers.add({
+                    'firstName': 'test',
+                    'lastName': 'test',
+                    'email': 'test@test.com',
+                    'phone': '07777777777',
+                    'address': 'test',
+                    'postcode': 'WA37HX',
+                    'type': 'S'
+                }, 'CTT7HX').then((id) => {
+                    request(server)
+                        .put('/api/v1/subscribers')
+                        .send({
+                            'id': id[0],
+                            'email': 'test@test.com',
+                            'address': 'test1',
+                            'postcode': 'WA27GA'
+                        })
+                        .set('Accept', 'application/json')
+                        .expect(204)
+                        .end((err, res) => {
+                            should.not.exist(err);
+                            subscribers.getByEmail('test@test.com')
+                                    .then((subscriber) => {
+                                        subscriber.firstName.should.eql('test');
+                                        subscriber.address.should.eql('test1');
+                                        subscriber.postcode.should.eql('WA27GA');
+                                        done();
+                                    })
+                        });
+
+                });
+            });
+
+            it('should update a subscriber when only status field is updated', (done) => {
+                subscribers.add({
+                    'firstName': 'test',
+                    'lastName': 'test',
+                    'email': 'test@test.com',
+                    'phone': '07777777777',
+                    'address': 'test',
+                    'postcode': 'WA37HX',
+                    'type': 'S'
+                }, 'CTT7HX').then((id) => {
+                    request(server)
+                        .put('/api/v1/subscribers')
+                        .send({
+                            'id': id[0],
+                            'email': 'test@test.com',
+                            'isActive': false
+                        })
+                        .set('Accept', 'application/json')
+                        .expect(204)
+                        .end((err, res) => {
+                            should.not.exist(err);
+                            subscribers.getByEmail('test@test.com')
+                                    .then((subscriber) => {
+                                        subscriber.firstName.should.eql('test');
+                                        subscriber.isActive.should.eql(false);
+                                        done();
+                                    })
+                        });
+
+                });
+            });
+        });
+    });
 });

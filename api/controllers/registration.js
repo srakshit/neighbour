@@ -33,6 +33,24 @@ function addSubscriber(req, res, next) {
         });
 }
 
+function updateSubscriber(req, res, next) {
+    let subscriber = req.swagger.params.subscriber.value;
+
+    if (subscriber.phone && new RegExp(/[a-zA-Z]/).test(subscriber.phone)) {
+        return next(new errs.InvalidContentError('phone number can\'t be alphanumeric!'));
+    }
+
+    subscribers.update(subscriber)
+        .then(() => {
+            res.send(204);
+            return next();
+        })
+        .catch((err) => {
+            console.log(err);
+            return next(new errs.InternalError(err.message, 'Failed to create subscriber!'));
+        });
+}
+
 function getSubscriberbyId(req, res, next) {
     let id = req.swagger.params.id.value;
     
@@ -72,6 +90,7 @@ function getSubscriberByEmail(req, res, next) {
 
 module.exports = {
     addSubscriber: addSubscriber,
+    updateSubscriber: updateSubscriber,
     getSubscriberbyId: getSubscriberbyId,
     getSubscriberByEmail: getSubscriberByEmail
 };

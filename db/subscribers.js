@@ -40,6 +40,77 @@ function add(subscriber, subscriberIdPrefix) {
     });
 }
 
+function update(subscriber) {
+    let userObj = {};
+    let subscriberObj = {};
+    
+    if (subscriber.firstName) {
+        userObj.firstName = subscriber.firstName;
+    }
+    if (subscriber.lastName) {
+        userObj.lastName = subscriber.lastName;
+    }
+    if (subscriber.address) {
+        userObj.address = subscriber.address;
+    }
+    if (subscriber.postcode) {
+        userObj.postcode = subscriber.postcode;
+    }
+    if (subscriber.phone) {
+        userObj.phone = subscriber.phone;
+    }
+    if (subscriber.firstName) {
+        userObj.firstName = subscriber.firstName;
+    }
+
+    if (subscriber.isActive !== undefined) {
+        subscriberObj.isActive = subscriber.isActive;
+    }
+
+    if (subscriber.stripeCustomerId !== undefined) {
+        subscriberObj.stripe_customer_id = subscriber.stripeCustomerId;
+    }
+
+    
+    if (!_.isEmpty(userObj) && !_.isEmpty(subscriberObj)) {
+        //Update both Users and Subscribers table
+        return knex.transaction(function (t) {
+            return Users()
+                .transacting(t)
+                .where('email', subscriber.email)
+                .update(userObj)
+                .then(function (id) {
+                    return Subscribers()
+                        .transacting(t)
+                        .where('subscriber_id', subscriber.id)
+                        .update(subscriberObj)
+                })
+                .then(t.commit)
+                .catch(t.rollback)
+        });
+    }else if (!_.isEmpty(userObj)){
+        //Update Users table only
+        return knex.transaction(function (t) {
+            return Users()
+                .transacting(t)
+                .where('email', subscriber.email)
+                .update(userObj)
+                .then(t.commit)
+                .catch(t.rollback)
+        });
+    }else if (!_.isEmpty(subscriberObj)) {
+        //Update Subscribers table only
+        return knex.transaction(function (t) {
+            return Subscribers()
+                .transacting(t)
+                .where('subscriber_id', subscriber.id)
+                .update(subscriberObj)
+                .then(t.commit)
+                .catch(t.rollback)
+        });
+    }   
+}
+
 function deleteByUserId(id) {
     return knex.transaction(function (t) {
         return Subscribers()
@@ -61,5 +132,6 @@ module.exports = {
     getByEmail: getByEmail,
     getById: getById,
     add: add,
-    deleteByUserId: deleteByUserId
+    deleteByUserId: deleteByUserId,
+    update: update
 };
