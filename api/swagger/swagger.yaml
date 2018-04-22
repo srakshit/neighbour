@@ -24,11 +24,35 @@ paths:
     get:
       description: Returns Subscriber to the caller
       # used as the method name of the controller
-      operationId: getSubscriber
+      operationId: getSubscriberbyId
       parameters:
         - in: path
           name: id
           description: Subscriber Id
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/SuccessResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /subscribers/email/{email}:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: registration
+    get:
+      description: Returns Subscriber to the caller
+      # used as the method name of the controller
+      operationId: getSubscriberByEmail
+      parameters:
+        - in: path
+          name: email
+          description: Subscriber Email
           required: true
           type: string
       responses:

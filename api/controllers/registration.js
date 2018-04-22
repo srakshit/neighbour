@@ -33,7 +33,7 @@ function addSubscriber(req, res, next) {
         });
 }
 
-function getSubscriber(req, res, next) {
+function getSubscriberbyId(req, res, next) {
     let id = req.swagger.params.id.value;
     
     subscribers.getById(id)
@@ -47,12 +47,31 @@ function getSubscriber(req, res, next) {
         })
         .catch((err) => {
             //TODO: Test code path
-            return next(new errs.InternalError(err.message, 'Failed to create subscriber!'));
+            return next(new errs.InternalError(err.message, 'Failed to retrieve subscriber!'));
+        });
+}
+
+function getSubscriberByEmail(req, res, next) {
+    let email = req.swagger.params.email.value;
+    
+    subscribers.getByEmail(email)
+        .then((subscriber) => {
+            if (subscriber) {
+                res.send(200, subscriber);
+                return next();
+            }else {
+                return next(new errs.ResourceNotFoundError('No matching subscriber found!'))
+            }
+        })
+        .catch((err) => {
+            //TODO: Test code path
+            return next(new errs.InternalError(err.message, 'Failed to retrieve subscriber!'));
         });
 }
 
 
 module.exports = {
     addSubscriber: addSubscriber,
-    getSubscriber: getSubscriber
+    getSubscriberbyId: getSubscriberbyId,
+    getSubscriberByEmail: getSubscriberByEmail
 };
