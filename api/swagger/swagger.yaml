@@ -137,6 +137,7 @@ definitions:
     - email
     - phone
     - address
+    - city
     - postcode
     properties:
       firstName:
@@ -159,7 +160,15 @@ definitions:
       address:
         type: string
         minLength: 1
-        example: 221B Baker Steeet, London
+        example: 221B Baker Steeet
+      city:
+        type: string
+        minLength: 1
+        example: London
+      county:
+        type: string
+        minLength: 1
+        example: Londng Borough
       postcode:
         type: string
         minLength: 6
@@ -196,7 +205,15 @@ definitions:
       address:
         type: string
         minLength: 1
-        example: 221B Baker Steeet, London
+        example: 221B Baker Steeet
+      city:
+        type: string
+        minLength: 1
+        example: London
+      county:
+        type: string
+        minLength: 1
+        example: Londng Borough
       postcode:
         type: string
         minLength: 6

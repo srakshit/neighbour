@@ -53,6 +53,12 @@ function update(subscriber) {
     if (subscriber.address) {
         userObj.address = subscriber.address;
     }
+    if (subscriber.city) {
+        userObj.city = subscriber.city;
+    }
+    if (subscriber.county) {
+        userObj.county = subscriber.county;
+    }
     if (subscriber.postcode) {
         userObj.postcode = subscriber.postcode;
     }

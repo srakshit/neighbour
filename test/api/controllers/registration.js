@@ -20,6 +20,8 @@ describe('controllers', () => {
                     'email': 'test@test.com',
                     'phone': '07777777777',
                     'address': 'test',
+                    'city': 'test',
+                    'county': 'test',
                     'postcode': 'WA37HX',
                     'type': 'S'
                 }, 'TT7HX').then((id) => {
@@ -36,6 +38,8 @@ describe('controllers', () => {
                             res.body.email.should.eql('test@test.com');
                             res.body.phone.should.eql('07777777777');
                             res.body.address.should.eql('test');
+                            res.body.city.should.eql('test');
+                            res.body.county.should.eql('test');
                             res.body.postcode.should.eql('WA37HX');
                             done();
                         });
@@ -51,6 +55,8 @@ describe('controllers', () => {
                     'email': 'test@test.com',
                     'phone': '07777777777',
                     'address': 'test',
+                    'city': 'test',
+                    'county': 'test',
                     'postcode': 'WA37HX',
                     'type': 'S'
                 }, 'TT7HX').then((id) => {
@@ -84,6 +90,8 @@ describe('controllers', () => {
                     'email': 'test@test.com',
                     'phone': '07777777777',
                     'address': 'test',
+                    'city': 'test',
+                    'county': 'test',
                     'postcode': 'WA37HX',
                     'type': 'S'
                 }, 'TT7HX').then((id) => {
@@ -100,6 +108,8 @@ describe('controllers', () => {
                             res.body.email.should.eql('test@test.com');
                             res.body.phone.should.eql('07777777777');
                             res.body.address.should.eql('test');
+                            res.body.city.should.eql('test');
+                            res.body.county.should.eql('test');
                             res.body.postcode.should.eql('WA37HX');
                             done();
                         });
@@ -115,6 +125,8 @@ describe('controllers', () => {
                     'email': 'test@test.com',
                     'phone': '07777777777',
                     'address': 'test',
+                    'city': 'test',
+                    'county': 'test',
                     'postcode': 'WA37HX',
                     'type': 'S'
                 }, 'TT7HX').then((id) => {
@@ -150,6 +162,8 @@ describe('controllers', () => {
                         'email': 'test@test.com',
                         'phone': '07777777777',
                         'address': 'test',
+                        'city': 'test',
+                        'county': 'test',
                         'postcode': 'WA37HX',
                         'type': 'S'
                     })
@@ -173,6 +187,8 @@ describe('controllers', () => {
                     'email': 'test@test.com',
                     'phone': '07777777777',
                     'address': 'test',
+                    'city': 'test',
+                    'county': 'test',
                     'postcode': 'WA37HX',
                     'type': 'S'
                 }).then();
@@ -187,6 +203,8 @@ describe('controllers', () => {
                         'email': 'test@test.com',
                         'phone': 'abcdefghijk',
                         'address': 'test',
+                        'city': 'test',
+                        'county': 'test',
                         'postcode': 'WA37HX'
                     })
                     .set('Accept', 'application/json')
@@ -208,6 +226,8 @@ describe('controllers', () => {
                         'email': 'test@test.com',
                         'phone': '07777777778',
                         'address': 'test',
+                        'city': 'test',
+                        'county': 'test',
                         'postcode': 'WA37HX'
                     })
                     .set('Accept', 'application/json')
@@ -229,6 +249,8 @@ describe('controllers', () => {
                         'email': 'test1@test.com',
                         'phone': '07777777777',
                         'address': 'test',
+                        'city': 'test',
+                        'county': 'test',
                         'postcode': 'WA37HX'
                     })
                     .set('Accept', 'application/json')
@@ -257,6 +279,8 @@ describe('controllers', () => {
                     'email': 'test@test.com',
                     'phone': '07777777777',
                     'address': 'test',
+                    'city': 'test',
+                    'county': 'test',
                     'postcode': 'WA37HX',
                     'type': 'S'
                 }, 'CTT7HX').then((id) => {
@@ -269,6 +293,8 @@ describe('controllers', () => {
                             'email': 'test@test.com',
                             'phone': '07777777778',
                             'address': 'test1',
+                            'city': 'test1',
+                            'county': 'test1',
                             'postcode': 'WA27GA',
                             'isActive' : false
                         })
@@ -282,6 +308,8 @@ describe('controllers', () => {
                                         subscriber.lastName.should.eql('test1');
                                         subscriber.phone.should.eql('07777777778');
                                         subscriber.address.should.eql('test1');
+                                        subscriber.city.should.eql('test1');
+                                        subscriber.county.should.eql('test1');
                                         subscriber.postcode.should.eql('WA27GA');
                                         subscriber.isActive.should.eql(false);
                                         done();
@@ -298,6 +326,8 @@ describe('controllers', () => {
                     'email': 'test@test.com',
                     'phone': '07777777777',
                     'address': 'test',
+                    'city': 'test',
+                    'county': 'test',
                     'postcode': 'WA37HX',
                     'type': 'S'
                 }, 'CTT7HX').then((id) => {
@@ -307,6 +337,8 @@ describe('controllers', () => {
                             'id': id[0],
                             'email': 'test@test.com',
                             'address': 'test1',
+                            'city': 'test1',
+                            'county': 'test1',
                             'postcode': 'WA27GA'
                         })
                         .set('Accept', 'application/json')
@@ -317,6 +349,8 @@ describe('controllers', () => {
                                     .then((subscriber) => {
                                         subscriber.firstName.should.eql('test');
                                         subscriber.address.should.eql('test1');
+                                        subscriber.city.should.eql('test1');
+                                        subscriber.county.should.eql('test1');
                                         subscriber.postcode.should.eql('WA27GA');
                                         done();
                                     })
@@ -332,6 +366,8 @@ describe('controllers', () => {
                     'email': 'test@test.com',
                     'phone': '07777777777',
                     'address': 'test',
+                    'city': 'test',
+                    'county': 'test',
                     'postcode': 'WA37HX',
                     'type': 'S'
                 }, 'CTT7HX').then((id) => {
