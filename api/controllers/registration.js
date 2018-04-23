@@ -11,7 +11,7 @@ function addSubscriber(req, res, next) {
         return next(new errs.InvalidContentError('phone number can\'t be alphanumeric!'));
     }
 
-    let subscriberIdPrefix = subscriber.lastName.substr(0, 1).toUpperCase() + subscriber.firstName.substr(0, 1).toUpperCase() + subscriber.postcode.toUpperCase();
+    let subscriberIdPrefix = 'S' + subscriber.lastName.substr(0, 1).toUpperCase() + subscriber.firstName.substr(0, 1).toUpperCase() + subscriber.postcode.toUpperCase();
 
     subscribers.add(subscriber, subscriberIdPrefix)
         .then((id) => {
