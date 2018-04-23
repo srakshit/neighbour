@@ -359,7 +359,7 @@ describe('controllers', () => {
                 });
             });
 
-            it('should update a subscriber when only status field is updated', (done) => {
+            it('should update a subscriber when status field and stripe customer id is updated', (done) => {
                 subscribers.add({
                     'firstName': 'test',
                     'lastName': 'test',
@@ -376,7 +376,8 @@ describe('controllers', () => {
                         .send({
                             'id': id[0],
                             'email': 'test@test.com',
-                            'isActive': false
+                            'isActive': false,
+                            'stripeCustomerId': 'test_cus_123456789'
                         })
                         .set('Accept', 'application/json')
                         .expect(204)
@@ -386,6 +387,7 @@ describe('controllers', () => {
                                     .then((subscriber) => {
                                         subscriber.firstName.should.eql('test');
                                         subscriber.isActive.should.eql(false);
+                                        subscriber.stripe_customer_id.should.eql('test_cus_123456789');
                                         done();
                                     })
                         });

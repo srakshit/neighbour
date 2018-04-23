@@ -76,7 +76,6 @@ function update(subscriber) {
     if (subscriber.stripeCustomerId !== undefined) {
         subscriberObj.stripe_customer_id = subscriber.stripeCustomerId;
     }
-
     
     if (!_.isEmpty(userObj) && !_.isEmpty(subscriberObj)) {
         //Update both Users and Subscribers table

@@ -229,7 +229,7 @@ definitions:
         minLength: 18
         maxLength: 18
         description: Subscriber Stripe customer ID
-        example: true
+        example: cus_CjePmBlyXYW03M
   SuccessResponse:
     required:
       - message
