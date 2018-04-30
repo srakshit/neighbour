@@ -18,6 +18,19 @@ consumes:
 produces:
   - application/json
 paths:
+  /ping:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: serviceCheck
+    get:
+      description: Returns pong to the caller
+      # used as the method name of the controller
+      operationId: getPong
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/SuccessResponse"
   /subscribers/{id}:
     # binds a127 app logic to a route
     x-swagger-router-controller: registration

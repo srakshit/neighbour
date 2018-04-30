@@ -35,9 +35,9 @@ module.exports = {
     client: 'pg',
     connection: {
       host: process.env.PG_HOST,
-      database: 'my_db',
-      user:     'username',
-      password: 'password'
+      database: 'catchernet',
+      user:     'catchernet',
+      password: 'catchernet2018'
     },
     pool: {
       min: 2,
@@ -55,9 +55,9 @@ module.exports = {
     client: 'pg',
     connection: {
       host: process.env.PG_HOST,
-      database: 'my_db',
-      user:     'username',
-      password: 'password'
+      database: 'catchernet',
+      user:     'catchernet',
+      password: 'catchernet2018'
     },
     pool: {
       min: 2,

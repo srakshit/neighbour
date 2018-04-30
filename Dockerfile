@@ -2,11 +2,12 @@ FROM node:8.10.0
 
 WORKDIR /code
 
-#Only required for debugging
-RUN npm install -g nodemon yarn knex
+RUN npm install -g yarn knex
 
 COPY . /code
 
+RUN yarn install --production
+
 EXPOSE 8081
 
-CMD ["npm", "start"]
+CMD ["yarn", "start"]
