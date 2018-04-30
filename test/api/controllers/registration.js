@@ -164,7 +164,7 @@ describe('controllers', () => {
                         'address': 'test',
                         'city': 'test',
                         'county': 'test',
-                        'postcode': 'WA37HX',
+                        'postcode': 'WA3 7HX',
                         'type': 'S'
                     })
                     .set('Accept', 'application/json')
@@ -295,7 +295,7 @@ describe('controllers', () => {
                             'address': 'test1',
                             'city': 'test1',
                             'county': 'test1',
-                            'postcode': 'WA27GA',
+                            'postcode': 'WA2 7GA',
                             'isActive' : false
                         })
                         .set('Accept', 'application/json')

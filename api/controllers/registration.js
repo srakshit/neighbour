@@ -11,6 +11,8 @@ function addSubscriber(req, res, next) {
         return next(new errs.InvalidContentError('phone number can\'t be alphanumeric!'));
     }
 
+    subscriber.postcode = subscriber.postcode.replace(' ', '');
+
     let subscriberIdPrefix = 'S' + subscriber.lastName.substr(0, 1).toUpperCase() + subscriber.firstName.substr(0, 1).toUpperCase() + subscriber.postcode.toUpperCase();
 
     subscribers.add(subscriber, subscriberIdPrefix)
@@ -35,6 +37,10 @@ function addSubscriber(req, res, next) {
 
 function updateSubscriber(req, res, next) {
     let subscriber = req.swagger.params.subscriber.value;
+
+    if (subscriber.postcode) {
+        subscriber.postcode = subscriber.postcode.replace(' ', '');
+    }
 
     if (subscriber.phone && new RegExp(/[a-zA-Z]/).test(subscriber.phone)) {
         return next(new errs.InvalidContentError('phone number can\'t be alphanumeric!'));
