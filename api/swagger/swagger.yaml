@@ -224,7 +224,6 @@ definitions:
         example: London
       county:
         type: string
-        minLength: 1
         example: Londng Borough
       postcode:
         type: string
