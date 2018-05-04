@@ -51,7 +51,7 @@ module.exports = {
     }
   },
 
-  production: {
+  prod: {
     client: 'pg',
     connection: {
       host: process.env.PG_HOST,
