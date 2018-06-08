@@ -89,20 +89,24 @@ function getSubscriberbyId(req, res, next) {
             });
     }else {
         subscribers.getById(id)
-        .then((subscriber) => {
-            if (subscriber) {
-                delete subscriber.id;
-                delete subscriber.user_id;
-                res.send(200, subscriber);
-                return next();
-            }else {
-                return next(new errs.ResourceNotFoundError('No matching subscriber found!'))
-            }
-        })
-        .catch((err) => {
-            //TODO: Test code path
-            return next(new errs.InternalError(err.message, 'Failed to retrieve subscriber!'));
-        });
+            .then((subscriber) => {
+                if (subscriber) {
+                    subscribers.getCatchersAllocatedToSubscribers(subscriber.id)
+                        .then((allocatedCatcher) => {
+                            subscriber.catcher = allocatedCatcher;
+                            delete subscriber.id;
+                            delete subscriber.user_id;
+                            res.send(200, subscriber);
+                            return next();
+                    });
+                }else {
+                    return next(new errs.ResourceNotFoundError('No matching subscriber found!'))
+                }
+            })
+            .catch((err) => {
+                //TODO: Test code path
+                return next(new errs.InternalError(err.message, 'Failed to retrieve subscriber!'));
+            });
     }
     
 }
