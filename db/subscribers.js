@@ -11,6 +11,10 @@ function Subscribers() {
     return knex('subscribers');
 }
 
+function CatcherAllocation() {
+    return knex('catcher_allocation');
+}
+
 function getByEmail(email) {
     return Subscribers()
             .innerJoin('users', 'subscribers.user_id', 'users.id')
@@ -30,6 +34,25 @@ function getByUid(uid) {
             .innerJoin('users', 'subscribers.user_id', 'users.id')
             .where('uid', uid)
             .first();
+}
+
+function getCatchersAllocatedToSubscribers(id) {
+    return CatcherAllocation()
+            .innerJoin('subscribers', 'catcher_allocation.subscriber_id', 'subscribers.user_id')
+            .innerJoin('users', 'catcher_allocation.catcher_id', 'users.id')
+            .innerJoin('catchers', 'catcher_allocation.catcher_id', 'catchers.user_id')
+            .where('subscribers.user_id', id)
+            .first()
+            .select('catchers.catcher_id as ref_id'
+                ,'users.uid'
+                ,'users.firstName'
+                ,'users.lastName'
+                ,'users.address'
+                ,'users.city'
+                ,'users.county'
+                ,'users.postcode'
+                ,'users.phone'
+                ,'users.email');
 }
 
 function add(subscriber, subscriberIdPrefix) {  
@@ -146,5 +169,6 @@ module.exports = {
     getByUid: getByUid,
     add: add,
     deleteByUserId: deleteByUserId,
-    update: update
+    update: update,
+    getCatchersAllocatedToSubscribers: getCatchersAllocatedToSubscribers
 };

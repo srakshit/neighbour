@@ -70,11 +70,15 @@ function getSubscriberbyId(req, res, next) {
     if (id.startsWith('usr_')) {
         subscribers.getByUid(id)
             .then((subscriber) => {
-                if (subscriber) {let uid = () => generate('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 22);
-                    delete subscriber.id;
-                    delete subscriber.user_id;
-                    res.send(200, subscriber);
-                    return next();
+                if (subscriber) {
+                    subscribers.getCatchersAllocatedToSubscribers(subscriber.id)
+                        .then((allocatedCatcher) => {
+                            subscriber.catcher = allocatedCatcher;
+                            delete subscriber.id;
+                            delete subscriber.user_id;
+                            res.send(200, subscriber);
+                            return next();
+                    });
                 }else {
                     return next(new errs.ResourceNotFoundError('No matching subscriber found!'))
                 }
