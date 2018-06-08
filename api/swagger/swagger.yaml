@@ -197,7 +197,35 @@ paths:
           schema:
             # a pointer to a definition
             $ref: "#/definitions/ErrorResponse"
-    
+    put:
+      operationId: updateCatcherAllocationForSubscriber
+      description: Update catcher allocaion for subscriber
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: uid
+          description: Subscriber Unique Id
+          required: true
+          type: string
+        - in: path
+          name: catcherRef
+          description: Catcher Reference
+          required: true
+          type: string
+      responses:
+        200:
+          description: Catcher allocated to subscriber
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/SuccessResponse"
+        400:
+          description: Invalid input - either uid or catcherRef is invalid
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/ErrorResponse"
   /swagger:
     x-swagger-pipe: swagger_raw
 # complex objects have schema definitions

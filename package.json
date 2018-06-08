@@ -9,6 +9,7 @@
   "main": "app.js",
   "dependencies": {
     "knex": "^0.14.5",
+    "moment": "^2.22.2",
     "nanoid": "^1.0.3",
     "npm-check-updates": "2.14.1",
     "pg": "^7.4.1",

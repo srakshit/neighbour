@@ -1,6 +1,7 @@
 'use strict';
 
 const _ = require('lodash');
+const moment = require('moment');
 const knex = require('./knex.js');
 
 function Users() {
@@ -179,6 +180,12 @@ function allocateCatcher(catcher_id, subscriber_id) {
             .insert({catcher_id: catcher_id, subscriber_id: subscriber_id});
 }
 
+function updateCatcherAllocation(catcher_id, subscriber_id) {
+    return CatcherAllocation()
+            .where({ subscriber_id: subscriber_id })
+            .update({ catcher_id: catcher_id, updated_at: moment().format('YYYY-MM-DD HH:mm:ss') });
+}
+
 module.exports = {
     getByEmail: getByEmail,
     getById: getById,
@@ -188,5 +195,6 @@ module.exports = {
     deleteByUserId: deleteByUserId,
     update: update,
     getCatchersAllocatedToSubscriber: getCatchersAllocatedToSubscriber,
-    allocateCatcher: allocateCatcher
+    allocateCatcher: allocateCatcher,
+    updateCatcherAllocation: updateCatcherAllocation
 };
