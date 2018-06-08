@@ -146,11 +146,48 @@ function getSubscriberByEmail(req, res, next) {
         });
 }
 
+function allocateCatcherToSubscriber(req, res, next) {
+    let subscriber_uid = req.swagger.params.uid.value;
+    let catcher_ref = req.swagger.params.catcherRef.value;
+    
+    subscribers.getByUid(subscriber_uid)
+        .then((subscriber) => {
+            if (subscriber) {
+                subscribers.getCatcherById(catcher_ref)
+                .then((catcher) => {
+                    if (catcher) {
+                        subscribers.allocateCatcher(catcher.id, subscriber.id)
+                            .then(() => {
+                                res.send(201, {
+                                    message: 'Subscriber ' + subscriber.firstName + ' ' + subscriber.lastName + ' is allocated to catcher' + catcher.firstName + ' ' + catcher.lastName, 
+                                    catcher_ref: catcher.catcher_id, 
+                                    subscriber_ref: subscriber.subscriber_id
+                                });
+                                return next();
+                            })
+                            .catch((err) => {
+                                return next(new errs.ConflictError('Catcher is already allocated to subscriber!'));
+                            });
+                    }else {
+                        return next(new errs.ResourceNotFoundError('Catcher with ref ' + catcher_ref + 'is not found!'));
+                    }
+                });
+            }else {
+                return next(new errs.ResourceNotFoundError('Subscriber with uid ' + subscriber_uid + 'is not found!'));
+            }
+        })
+        .catch((err) => {
+            //TODO: Test code path
+            return next(new errs.InternalError(err.message, 'Failed to allocate catcher to subscriber!'));
+        });
+}
+
 
 module.exports = {
     addSubscriber: addSubscriber,
     updateSubscriber: updateSubscriber,
     getSubscriberbyId: getSubscriberbyId,
     getSubscriberByEmail: getSubscriberByEmail,
-    getCatchersAllocatedToSubscriber: getCatchersAllocatedToSubscriber
+    getCatchersAllocatedToSubscriber: getCatchersAllocatedToSubscriber,
+    allocateCatcherToSubscriber: allocateCatcherToSubscriber
 };

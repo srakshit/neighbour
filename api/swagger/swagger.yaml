@@ -85,16 +85,16 @@ paths:
       operationId: addSubscriber
       description: Add a subscriber to the system
       consumes:
-      - application/json
+        - application/json
       produces:
-      - application/json
+        - application/json
       parameters:
-      - in: body
-        name: subscriber
-        required: true
-        description: Add Subscriber
-        schema:
-          $ref: '#/definitions/AddSubscriber'
+        - in: body
+          name: subscriber
+          required: true
+          description: Add Subscriber
+          schema:
+            $ref: '#/definitions/AddSubscriber'
       responses:
         201:
           description: subscriber added
@@ -111,22 +111,21 @@ paths:
           schema:
             # a pointer to a definition
             $ref: "#/definitions/ErrorResponse"
-    
     put:
       summary: Update an existing subscriber
       operationId: updateSubscriber
       description: Update an existing subscriber
       consumes:
-      - application/json
+        - application/json
       produces:
-      - application/json
+        - application/json
       parameters:
-      - in: body
-        name: subscriber
-        required: true
-        description: Update Subscriber
-        schema:
-          $ref: '#/definitions/UpdateSubscriber'
+        - in: body
+          name: subscriber
+          required: true
+          description: Update Subscriber
+          schema:
+            $ref: '#/definitions/UpdateSubscriber'
       responses:
         204:
           description: Subscriber updated
@@ -162,6 +161,43 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /subscribers/{uid}/catchers/{catcherRef}:
+    x-swagger-router-controller: registration
+    post:
+      operationId: allocateCatcherToSubscriber
+      description: Allocate catcher to subscriber
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: uid
+          description: Subscriber Unique Id
+          required: true
+          type: string
+        - in: path
+          name: catcherRef
+          description: Catcher Reference
+          required: true
+          type: string
+      responses:
+        201:
+          description: Catcher allocated to subscriber
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/SuccessResponse"
+        400:
+          description: Invalid input - either uid or catcherRef is invalid
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/ErrorResponse"
+        409:
+          description: Catcher is already allocated to subscriber
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/ErrorResponse"
+    
   /swagger:
     x-swagger-pipe: swagger_raw
 # complex objects have schema definitions
