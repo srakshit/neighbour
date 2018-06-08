@@ -138,6 +138,30 @@ paths:
           schema:
             # a pointer to a definition
             $ref: "#/definitions/ErrorResponse"
+  /subscribers/{uid}/catchers:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: registration
+    get:
+      description: Returns allocated catcher info to the caller
+      # used as the method name of the controller
+      operationId: getCatchersAllocatedToSubscriber
+      parameters:
+        - in: path
+          name: uid
+          description: Subscriber Unique Id
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/SuccessResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /swagger:
     x-swagger-pipe: swagger_raw
 # complex objects have schema definitions

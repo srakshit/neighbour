@@ -36,23 +36,23 @@ function getByUid(uid) {
             .first();
 }
 
-function getCatchersAllocatedToSubscribers(id) {
+function getCatchersAllocatedToSubscriber(uid) {
     return CatcherAllocation()
+            .innerJoin('users as u1', 'catcher_allocation.subscriber_id', 'u1.id')
             .innerJoin('subscribers', 'catcher_allocation.subscriber_id', 'subscribers.user_id')
-            .innerJoin('users', 'catcher_allocation.catcher_id', 'users.id')
+            .innerJoin('users as u2', 'catcher_allocation.catcher_id', 'u2.id')
             .innerJoin('catchers', 'catcher_allocation.catcher_id', 'catchers.user_id')
-            .where('subscribers.user_id', id)
-            .first()
+            .where('u1.uid', uid)
             .select('catchers.catcher_id as ref_id'
-                ,'users.uid'
-                ,'users.firstName'
-                ,'users.lastName'
-                ,'users.address'
-                ,'users.city'
-                ,'users.county'
-                ,'users.postcode'
-                ,'users.phone'
-                ,'users.email');
+                ,'u2.uid'
+                ,'u2.firstName'
+                ,'u2.lastName'
+                ,'u2.address'
+                ,'u2.city'
+                ,'u2.county'
+                ,'u2.postcode'
+                ,'u2.phone'
+                ,'u2.email');
 }
 
 function add(subscriber, subscriberIdPrefix) {  
@@ -170,5 +170,5 @@ module.exports = {
     add: add,
     deleteByUserId: deleteByUserId,
     update: update,
-    getCatchersAllocatedToSubscribers: getCatchersAllocatedToSubscribers
+    getCatchersAllocatedToSubscriber: getCatchersAllocatedToSubscriber
 };

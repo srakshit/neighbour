@@ -71,7 +71,7 @@ function getSubscriberbyId(req, res, next) {
         subscribers.getByUid(id)
             .then((subscriber) => {
                 if (subscriber) {
-                    subscribers.getCatchersAllocatedToSubscribers(subscriber.id)
+                    subscribers.getCatchersAllocatedToSubscriber(subscriber.uid)
                         .then((allocatedCatcher) => {
                             subscriber.catcher = allocatedCatcher;
                             delete subscriber.id;
@@ -91,7 +91,7 @@ function getSubscriberbyId(req, res, next) {
         subscribers.getById(id)
             .then((subscriber) => {
                 if (subscriber) {
-                    subscribers.getCatchersAllocatedToSubscribers(subscriber.id)
+                    subscribers.getCatchersAllocatedToSubscriber(subscriber.uid)
                         .then((allocatedCatcher) => {
                             subscriber.catcher = allocatedCatcher;
                             delete subscriber.id;
@@ -108,7 +108,24 @@ function getSubscriberbyId(req, res, next) {
                 return next(new errs.InternalError(err.message, 'Failed to retrieve subscriber!'));
             });
     }
+}
+
+function getCatchersAllocatedToSubscriber(req, res, next) {
+    let uid = req.swagger.params.uid.value;
     
+    subscribers.getCatchersAllocatedToSubscriber(uid)
+            .then((allocatedCatcher) => {
+                if (allocatedCatcher) {
+                    res.send(200, allocatedCatcher);
+                    return next();
+                }else {
+                    return next(new errs.ResourceNotFoundError('No catcher is allocated to the subscriber!'))
+                }
+            })
+            .catch((err) => {
+                //TODO: Test code path
+                return next(new errs.InternalError(err.message, 'Failed to retrieve catcher allocation to subscriber'));
+            });
 }
 
 function getSubscriberByEmail(req, res, next) {
@@ -134,5 +151,6 @@ module.exports = {
     addSubscriber: addSubscriber,
     updateSubscriber: updateSubscriber,
     getSubscriberbyId: getSubscriberbyId,
-    getSubscriberByEmail: getSubscriberByEmail
+    getSubscriberByEmail: getSubscriberByEmail,
+    getCatchersAllocatedToSubscriber: getCatchersAllocatedToSubscriber
 };
