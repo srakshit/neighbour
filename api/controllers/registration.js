@@ -1,7 +1,10 @@
 'use strict';
 
-var errs = require('restify-errors');
-var subscribers = require('../../db/subscribers');
+const errs = require('restify-errors');
+const subscribers = require('../../db/subscribers');
+const generate = require('nanoid/generate');
+
+let uid = () => generate('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 22);
 
 function addSubscriber(req, res, next) {
     let subscriber = req.swagger.params.subscriber.value;
@@ -12,13 +15,17 @@ function addSubscriber(req, res, next) {
     }
 
     subscriber.postcode = subscriber.postcode.replace(' ', '');
+    subscriber.uid = 'usr_' + uid();
 
     let subscriberIdPrefix = 'S' + subscriber.lastName.substr(0, 1).toUpperCase() + subscriber.firstName.substr(0, 1).toUpperCase() + subscriber.postcode.toUpperCase();
 
     subscribers.add(subscriber, subscriberIdPrefix)
         .then((id) => {
-            res.send(201, {message: 'Subscriber ' + subscriber.firstName + ' ' + subscriber.lastName + ' added!', id: id[0]});
-            return next();
+            subscribers.getById(id[0])
+                .then((newSubscriber) => {
+                    res.send(201, {message: 'Subscriber ' + subscriber.firstName + ' ' + subscriber.lastName + ' added!', id: id[0], uid: newSubscriber.uid});
+                    return next();
+            });
         })
         .catch((err) => {
             let errMsg = err.message.toLowerCase();
@@ -58,11 +65,30 @@ function updateSubscriber(req, res, next) {
 }
 
 function getSubscriberbyId(req, res, next) {
-    let id = req.swagger.params.id.value;
+    let id = req.swagger.params.uid.value;
     
-    subscribers.getById(id)
+    if (id.startsWith('usr_')) {
+        subscribers.getByUid(id)
+            .then((subscriber) => {
+                if (subscriber) {let uid = () => generate('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 22);
+                    delete subscriber.id;
+                    delete subscriber.user_id;
+                    res.send(200, subscriber);
+                    return next();
+                }else {
+                    return next(new errs.ResourceNotFoundError('No matching subscriber found!'))
+                }
+            })
+            .catch((err) => {
+                //TODO: Test code path
+                return next(new errs.InternalError(err.message, 'Failed to retrieve subscriber!'));
+            });
+    }else {
+        subscribers.getById(id)
         .then((subscriber) => {
             if (subscriber) {
+                delete subscriber.id;
+                delete subscriber.user_id;
                 res.send(200, subscriber);
                 return next();
             }else {
@@ -73,6 +99,8 @@ function getSubscriberbyId(req, res, next) {
             //TODO: Test code path
             return next(new errs.InternalError(err.message, 'Failed to retrieve subscriber!'));
         });
+    }
+    
 }
 
 function getSubscriberByEmail(req, res, next) {

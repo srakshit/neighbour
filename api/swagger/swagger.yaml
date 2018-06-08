@@ -31,17 +31,17 @@ paths:
           schema:
             # a pointer to a definition
             $ref: "#/definitions/SuccessResponse"
-  /subscribers/{id}:
+  /subscribers/{uid}:
     # binds a127 app logic to a route
     x-swagger-router-controller: registration
     get:
-      description: Returns Subscriber to the caller
+      description: Returns Subscriber info to the caller
       # used as the method name of the controller
       operationId: getSubscriberbyId
       parameters:
         - in: path
-          name: id
-          description: Subscriber Id
+          name: uid
+          description: Subscriber Unique Id
           required: true
           type: string
       responses:
@@ -59,7 +59,7 @@ paths:
     # binds a127 app logic to a route
     x-swagger-router-controller: registration
     get:
-      description: Returns Subscriber to the caller
+      description: Returns Subscriber info to the caller
       # used as the method name of the controller
       operationId: getSubscriberByEmail
       parameters:
@@ -180,7 +180,7 @@ definitions:
         example: London
       county:
         type: string
-        example: Londng Borough
+        example: London Borough
       postcode:
         type: string
         minLength: 6

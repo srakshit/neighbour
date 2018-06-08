@@ -1,9 +1,12 @@
 'use strict';
 
-var should = require('should');
-var request = require('supertest');
-var server = require('../../../app');
-var subscribers = require('../../../db/subscribers');
+const should = require('should');
+const request = require('supertest');
+const server = require('../../../app');
+const subscribers = require('../../../db/subscribers');
+const generate = require('nanoid/generate');
+
+let uid = () => generate('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 22);
 
 describe('controllers', () => {
     describe('GET /subscribers', () => {
@@ -13,12 +16,13 @@ describe('controllers', () => {
                 .then((subscriber) => subscribers.deleteByUserId(subscriber.id).then()));
 
         describe('happy path', () => {
-            it('should get a subscriber', (done) => {
+            it('should get a subscriber by id', (done) => {
                 subscribers.add({
                     'firstName': 'test',
                     'lastName': 'test',
                     'email': 'test@test.com',
                     'phone': '07777777777',
+                    'uid': 'usr_' + uid(),
                     'address': 'test',
                     'city': 'test',
                     'county': 'test',
@@ -45,6 +49,40 @@ describe('controllers', () => {
                         });
                 });
             });
+
+            it('should get a subscriber by uid', (done) => {
+                request(server)
+                    .post('/api/v1/subscribers/')
+                    .send({
+                        'firstName': 'test',
+                        'lastName': 'test',
+                        'email': 'test@test.com',
+                        'phone': '07777777777',
+                        'uid': 'usr_' + uid(),
+                        'address': 'test',
+                        'city': 'test',
+                        'county': 'test',
+                        'postcode': 'WA37HX',
+                        'type': 'C'                
+                    })
+                    .end((err, res) => {
+                        request(server)
+                            .get('/api/v1/subscribers/' + res.body.uid)
+                            .set('Accept', 'application/json')
+                            .expect('Content-Type', /json/)
+                            .expect(200)
+                            .end((err, res) => {
+                                should.not.exist(err);
+                                res.body.firstName.should.eql('test');
+                                res.body.lastName.should.eql('test');
+                                res.body.email.should.eql('test@test.com');
+                                res.body.phone.should.eql('07777777777');
+                                res.body.address.should.eql('test');
+                                res.body.postcode.should.eql('WA37HX');
+                                done();
+                            });
+                });
+            });
         });
 
         describe('error paths', () => {
@@ -54,6 +92,7 @@ describe('controllers', () => {
                     'lastName': 'test',
                     'email': 'test@test.com',
                     'phone': '07777777777',
+                    'uid': 'usr_' + uid(),
                     'address': 'test',
                     'city': 'test',
                     'county': 'test',
@@ -89,6 +128,7 @@ describe('controllers', () => {
                     'lastName': 'test',
                     'email': 'test@test.com',
                     'phone': '07777777777',
+                    'uid': 'usr_' + uid(),
                     'address': 'test',
                     'city': 'test',
                     'county': 'test',
@@ -124,6 +164,7 @@ describe('controllers', () => {
                     'lastName': 'test',
                     'email': 'test@test.com',
                     'phone': '07777777777',
+                    'uid': 'usr_' + uid(),
                     'address': 'test',
                     'city': 'test',
                     'county': 'test',
@@ -161,6 +202,7 @@ describe('controllers', () => {
                         'lastName': 'test',
                         'email': 'test@test.com',
                         'phone': '07777777777',
+                        'uid': 'usr_' + uid(),
                         'address': 'test',
                         'city': 'test',
                         'county': 'test',
@@ -186,6 +228,7 @@ describe('controllers', () => {
                     'lastName': 'test',
                     'email': 'test@test.com',
                     'phone': '07777777777',
+                    'uid': 'usr_' + uid(),
                     'address': 'test',
                     'city': 'test',
                     'county': 'test',
@@ -202,6 +245,7 @@ describe('controllers', () => {
                         'lastName': 'test',
                         'email': 'test@test.com',
                         'phone': 'abcdefghijk',
+                        'uid': 'usr_' + uid(),
                         'address': 'test',
                         'city': 'test',
                         'county': 'test',
@@ -225,6 +269,7 @@ describe('controllers', () => {
                         'lastName': 'test',
                         'email': 'test@test.com',
                         'phone': '07777777778',
+                        'uid': 'usr_' + uid(),
                         'address': 'test',
                         'city': 'test',
                         'county': 'test',
@@ -248,6 +293,7 @@ describe('controllers', () => {
                         'lastName': 'test',
                         'email': 'test1@test.com',
                         'phone': '07777777777',
+                        'uid': 'usr_' + uid(),
                         'address': 'test',
                         'city': 'test',
                         'county': 'test',
@@ -278,6 +324,7 @@ describe('controllers', () => {
                     'lastName': 'test',
                     'email': 'test@test.com',
                     'phone': '07777777777',
+                    'uid': 'usr_' + uid(),
                     'address': 'test',
                     'city': 'test',
                     'county': 'test',
@@ -313,7 +360,7 @@ describe('controllers', () => {
                                         subscriber.postcode.should.eql('WA27GA');
                                         subscriber.isActive.should.eql(false);
                                         done();
-                                    })
+                                    });
                         });
 
                 });
@@ -325,6 +372,7 @@ describe('controllers', () => {
                     'lastName': 'test',
                     'email': 'test@test.com',
                     'phone': '07777777777',
+                    'uid': 'usr_' + uid(),
                     'address': 'test',
                     'city': 'test',
                     'county': 'test',
@@ -353,7 +401,7 @@ describe('controllers', () => {
                                         subscriber.county.should.eql('test1');
                                         subscriber.postcode.should.eql('WA27GA');
                                         done();
-                                    })
+                                    });
                         });
 
                 });
@@ -365,6 +413,7 @@ describe('controllers', () => {
                     'lastName': 'test',
                     'email': 'test@test.com',
                     'phone': '07777777777',
+                    'uid': 'usr_' + uid(),
                     'address': 'test',
                     'city': 'test',
                     'county': 'test',
@@ -389,7 +438,7 @@ describe('controllers', () => {
                                         subscriber.isActive.should.eql(false);
                                         subscriber.stripe_customer_id.should.eql('test_cus_123456789');
                                         done();
-                                    })
+                                    });
                         });
 
                 });

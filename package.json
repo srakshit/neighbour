@@ -9,6 +9,7 @@
   "main": "app.js",
   "dependencies": {
     "knex": "^0.14.5",
+    "nanoid": "^1.0.3",
     "npm-check-updates": "2.14.1",
     "pg": "^7.4.1",
     "restify": "^4.0.2",
@@ -16,7 +17,6 @@
     "swagger-restify-mw": "^0.1.0"
   },
   "devDependencies": {
-    "sqlite3": "4.0.0",
     "eslint": "^4.19.1",
     "grunt": "^1.0.1",
     "grunt-contrib-jshint": "^1.0.0",
@@ -27,6 +27,7 @@
     "mocha": "^2.4.5",
     "mocha-jenkins-reporter": "^0.2.2",
     "should": "^7.1.0",
+    "sqlite3": "4.0.0",
     "supertest": "^1.0.0"
   },
   "scripts": {
