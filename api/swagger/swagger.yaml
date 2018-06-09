@@ -22,7 +22,8 @@ paths:
     # binds a127 app logic to a route
     x-swagger-router-controller: serviceCheck
     get:
-      description: Returns pong to the caller
+      summary: Returns pong. Used for health check
+      description: Returns pong. Used for health check
       # used as the method name of the controller
       operationId: getPong
       responses:
@@ -35,7 +36,8 @@ paths:
     # binds a127 app logic to a route
     x-swagger-router-controller: registration
     get:
-      description: Returns Subscriber info to the caller
+      summary: Returns subscriber info
+      description: Returns subscriber info
       # used as the method name of the controller
       operationId: getSubscriberbyId
       parameters:
@@ -59,7 +61,8 @@ paths:
     # binds a127 app logic to a route
     x-swagger-router-controller: registration
     get:
-      description: Returns Subscriber info to the caller
+      summary: Returns subscriber info
+      description: Returns subscriber info
       # used as the method name of the controller
       operationId: getSubscriberByEmail
       parameters:
@@ -82,8 +85,9 @@ paths:
   /subscribers:
     x-swagger-router-controller: registration
     post:
+      summary: Add a subscriber
       operationId: addSubscriber
-      description: Add a subscriber to the system
+      description: Add a subscriber
       consumes:
         - application/json
       produces:
@@ -141,6 +145,7 @@ paths:
     # binds a127 app logic to a route
     x-swagger-router-controller: allocation
     get:
+      summary: Returns catcher allocated to the subscriber
       description: Returns catcher allocated to the subscriber
       # used as the method name of the controller
       operationId: getCatchersAllocatedToSubscriber
@@ -164,6 +169,7 @@ paths:
   /subscribers/{uid}/catchers/{catcherRef}:
     x-swagger-router-controller: allocation
     post:
+      summary: Allocate catcher to subscriber
       operationId: allocateCatcherToSubscriber
       description: Allocate catcher to subscriber
       consumes:
@@ -198,6 +204,7 @@ paths:
             # a pointer to a definition
             $ref: "#/definitions/ErrorResponse"
     put:
+      summary: Update catcher allocaion for subscriber
       operationId: updateCatcherAllocationForSubscriber
       description: Update catcher allocaion for subscriber
       consumes:
