@@ -77,7 +77,7 @@ function getCatchersAllocatedToSubscriber(req, res, next) {
     
     subscribers.getCatchersAllocatedToSubscriber(uid)
             .then((allocatedCatcher) => {
-                if (allocatedCatcher) {
+                if (allocatedCatcher.length > 0) {
                     res.send(200, allocatedCatcher);
                     return next();
                 }else {
