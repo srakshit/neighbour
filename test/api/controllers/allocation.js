@@ -10,7 +10,7 @@ const generate = require('nanoid/generate');
 let uid = () => generate('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 22);
 
 describe('controllers', () => {
-    describe.only('POST /subscribers/{uid}/catchers/{catcherRef}', () => {
+    describe('POST /subscribers/{uid}/catchers/{catcherRef}', () => {
         //Setup
         beforeEach((done) => {
             subscribers.add({
@@ -63,10 +63,7 @@ describe('controllers', () => {
 
                                 request(server)
                                     .post('/api/v1/subscribers/' + subscriber.uid + '/catchers/' + catcher.catcher_id)
-                                    .send({
-                                        'catcher_id': catcher.id,
-                                        'subscriber_id': subscriber.id
-                                    })
+                                    .set('Content-Type', 'application/json')
                                     .set('Accept', 'application/json')
                                     .expect('Content-Type', /json/)
                                     .expect(201)
@@ -89,10 +86,7 @@ describe('controllers', () => {
 
                                 request(server)
                                     .post('/api/v1/subscribers/' + subscriber.uid + '/catchers/C001')
-                                    .send({
-                                        'catcher_id': catcher.id,
-                                        'subscriber_id': subscriber.id
-                                    })
+                                    .set('Content-Type', 'application/json')
                                     .set('Accept', 'application/json')
                                     .expect('Content-Type', /json/)
                                     .expect(404)
@@ -113,10 +107,7 @@ describe('controllers', () => {
 
                                 request(server)
                                     .post('/api/v1/subscribers/usr_sQe2/catchers/' + catcher.catcher_id)
-                                    .send({
-                                        'catcher_id': catcher.id,
-                                        'subscriber_id': subscriber.id
-                                    })
+                                    .set('Content-Type', 'application/json')
                                     .set('Accept', 'application/json')
                                     .expect('Content-Type', /json/)
                                     .expect(404)
@@ -139,10 +130,7 @@ describe('controllers', () => {
                                     .then(() => {
                                         request(server)
                                             .post('/api/v1/subscribers/' + subscriber.uid + '/catchers/' + catcher.catcher_id)
-                                            .send({
-                                                'catcher_id': catcher.id,
-                                                'subscriber_id': subscriber.id
-                                            })
+                                            .set('Content-Type', 'application/json')
                                             .set('Accept', 'application/json')
                                             .expect('Content-Type', /json/)
                                             .expect(409)
@@ -158,137 +146,143 @@ describe('controllers', () => {
         });
     });
 
-    describe.skip('PUT /subscribers', () => {
+    describe('PUT /subscribers/{uid}/catchers/{catcherRef}', () => {
+        //Setup
+        beforeEach((done) => {
+            subscribers.add({
+                'firstName': 'test',
+                'lastName': 'test',
+                'email': 'subscriber@test.com',
+                'phone': '07777777777',
+                'uid': 'usr_' + uid(),
+                'address': 'test',
+                'city': 'test',
+                'county': 'test',
+                'postcode': 'WA37HX',
+                'type': 'S'
+            }, 'S').then(() => {
+                catchers.add({
+                    'firstName': 'test',
+                    'lastName': 'test',
+                    'email': 'catcher1@test.com',
+                    'phone': '07777777778',
+                    'uid': 'usr_' + uid(),
+                    'address': 'test',
+                    'city': 'test',
+                    'county': 'test',
+                    'postcode': 'WA37HX',
+                    'type': 'C'
+                }, 'C').then(() => {
+                    catchers.add({
+                        'firstName': 'test',
+                        'lastName': 'test',
+                        'email': 'catcher2@test.com',
+                        'phone': '07777777779',
+                        'uid': 'usr_' + uid(),
+                        'address': 'test',
+                        'city': 'test',
+                        'county': 'test',
+                        'postcode': 'WA37HX',
+                        'type': 'C'
+                    }, 'C').then(() => {
+                        subscribers.getByEmail('subscriber@test.com')
+                            .then((subscriber) => {
+                                catchers.getByEmail('catcher1@test.com')
+                                    .then((catcher) => {
+                                        subscribers.allocateCatcher(catcher.id,subscriber.id)
+                                            .then(() => done());
+                                    });
+                            });
+                    });
+                });
+            });
+        });
+        
         //Cleanup
-        afterEach(() => 
-            subscribers.getByEmail('test@test.com')
-                .then((subscriber) => subscribers.deleteByUserId(subscriber.id).then()));
+        afterEach((done) => {
+            catchers.getByEmail('catcher1@test.com')
+                .then((catcher) => {
+                    catchers.deleteByUserId(catcher.id)
+                        .then(() => {
+                            catchers.getByEmail('catcher2@test.com')
+                                .then((catcher) => {
+                                    catchers.deleteByUserId(catcher.id)
+                                        .then(() => {
+                                            subscribers.getByEmail('subscriber@test.com')
+                                            .then((subscriber) => {
+                                                subscribers.deleteByUserId(subscriber.id).then(() => done());
+                                            });
+                                        });
+                                    });
+                            });
+
+                });
+        });
 
         describe('happy path', () => {
-            it('should update a subscriber when all fields are provided', (done) => {
-                subscribers.add({
-                    'firstName': 'test',
-                    'lastName': 'test',
-                    'email': 'test@test.com',
-                    'phone': '07777777777',
-                    'uid': 'usr_' + uid(),
-                    'address': 'test',
-                    'city': 'test',
-                    'county': 'test',
-                    'postcode': 'WA37HX',
-                    'type': 'S'
-                }, 'CTT7HX').then((id) => {
-                    request(server)
-                        .put('/api/v1/subscribers')
-                        .send({
-                            'id': id[0],
-                            'firstName': 'test1',
-                            'lastName': 'test1',
-                            'email': 'test@test.com',
-                            'phone': '07777777778',
-                            'address': 'test1',
-                            'city': 'test1',
-                            'county': 'test1',
-                            'postcode': 'WA2 7GA',
-                            'isActive' : false
-                        })
-                        .set('Accept', 'application/json')
-                        .expect(204)
-                        .end((err, res) => {
-                            should.not.exist(err);
-                            subscribers.getByEmail('test@test.com')
-                                    .then((subscriber) => {
-                                        subscriber.firstName.should.eql('test1');
-                                        subscriber.lastName.should.eql('test1');
-                                        subscriber.phone.should.eql('07777777778');
-                                        subscriber.address.should.eql('test1');
-                                        subscriber.city.should.eql('test1');
-                                        subscriber.county.should.eql('test1');
-                                        subscriber.postcode.should.eql('WA27GA');
-                                        subscriber.isActive.should.eql(false);
+            it('should update allocation of catcher for subscriber', (done) => {
+                subscribers.getByEmail('subscriber@test.com')
+                    .then((subscriber) => {
+                        catchers.getByEmail('catcher2@test.com')
+                            .then((catcher) => {
+
+                                request(server)
+                                    .put('/api/v1/subscribers/' + subscriber.uid + '/catchers/' + catcher.catcher_id)
+                                    .set('Content-Type', 'application/json')
+                                    .set('Accept', 'application/json')
+                                    .expect('Content-Type', /json/)
+                                    .expect(200)
+                                    .end((err, res) => {
+                                        should.not.exist(err);
+                                        res.body.message.should.eql('Subscriber test test is now allocated to catcher test test');
                                         done();
                                     });
-                        });
+                            });
+                    });
+            });
+        });
 
-                });
+        describe('error paths', () => {
+            it('should throw ResourceNotFound error when catcher ref is invalid', (done) => {
+                subscribers.getByEmail('subscriber@test.com')
+                    .then((subscriber) => {
+                        catchers.getByEmail('catcher2@test.com')
+                            .then((catcher) => {
+
+                                request(server)
+                                    .put('/api/v1/subscribers/' + subscriber.uid + '/catchers/C001')
+                                    .set('Content-Type', 'application/json')
+                                    .set('Accept', 'application/json')
+                                    .expect('Content-Type', /json/)
+                                    .expect(404)
+                                    .end((err, res) => {
+                                        should.not.exist(err);
+                                        res.body.should.eql({ code: 'ResourceNotFound', message: 'Catcher with ref C001 is not found!' });
+                                        done();
+                                    });
+                            });
+                    });
             });
 
-            it('should update a subscriber when few personal detail fields are upadted', (done) => {
-                subscribers.add({
-                    'firstName': 'test',
-                    'lastName': 'test',
-                    'email': 'test@test.com',
-                    'phone': '07777777777',
-                    'uid': 'usr_' + uid(),
-                    'address': 'test',
-                    'city': 'test',
-                    'county': 'test',
-                    'postcode': 'WA37HX',
-                    'type': 'S'
-                }, 'CTT7HX').then((id) => {
-                    request(server)
-                        .put('/api/v1/subscribers')
-                        .send({
-                            'id': id[0],
-                            'email': 'test@test.com',
-                            'address': 'test1',
-                            'city': 'test1',
-                            'county': 'test1',
-                            'postcode': 'WA27GA'
-                        })
-                        .set('Accept', 'application/json')
-                        .expect(204)
-                        .end((err, res) => {
-                            should.not.exist(err);
-                            subscribers.getByEmail('test@test.com')
-                                    .then((subscriber) => {
-                                        subscriber.firstName.should.eql('test');
-                                        subscriber.address.should.eql('test1');
-                                        subscriber.city.should.eql('test1');
-                                        subscriber.county.should.eql('test1');
-                                        subscriber.postcode.should.eql('WA27GA');
+            it('should throw ResourceNotFound error when subscriber uid is invalid', (done) => {
+                subscribers.getByEmail('subscriber@test.com')
+                    .then((subscriber) => {
+                        catchers.getByEmail('catcher2@test.com')
+                            .then((catcher) => {
+
+                                request(server)
+                                    .put('/api/v1/subscribers/usr_sQe2/catchers/' + catcher.catcher_id)
+                                    .set('Content-Type', 'application/json')
+                                    .set('Accept', 'application/json')
+                                    .expect('Content-Type', /json/)
+                                    .expect(404)
+                                    .end((err, res) => {
+                                        should.not.exist(err);
+                                        res.body.should.eql({ code: 'ResourceNotFound', message: 'Subscriber with uid usr_sQe2 is not found!' });
                                         done();
                                     });
-                        });
-
-                });
-            });
-
-            it('should update a subscriber when status field and stripe customer id is updated', (done) => {
-                subscribers.add({
-                    'firstName': 'test',
-                    'lastName': 'test',
-                    'email': 'test@test.com',
-                    'phone': '07777777777',
-                    'uid': 'usr_' + uid(),
-                    'address': 'test',
-                    'city': 'test',
-                    'county': 'test',
-                    'postcode': 'WA37HX',
-                    'type': 'S'
-                }, 'CTT7HX').then((id) => {
-                    request(server)
-                        .put('/api/v1/subscribers')
-                        .send({
-                            'id': id[0],
-                            'email': 'test@test.com',
-                            'isActive': false,
-                            'stripeCustomerId': 'test_cus_123456789'
-                        })
-                        .set('Accept', 'application/json')
-                        .expect(204)
-                        .end((err, res) => {
-                            should.not.exist(err);
-                            subscribers.getByEmail('test@test.com')
-                                    .then((subscriber) => {
-                                        subscriber.firstName.should.eql('test');
-                                        subscriber.isActive.should.eql(false);
-                                        subscriber.stripe_customer_id.should.eql('test_cus_123456789');
-                                        done();
-                                    });
-                        });
-
-                });
+                            });
+                    });
             });
         });
     });

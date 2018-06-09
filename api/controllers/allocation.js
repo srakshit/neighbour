@@ -63,11 +63,11 @@ function updateCatcherAllocationForSubscriber(req, res, next) {
                                 return next(new errs.InternalError(err.message, 'Failed to allocate catcher to subscriber!'));
                             });
                     }else {
-                        return next(new errs.ResourceNotFoundError('Catcher with ref ' + catcher_ref + 'is not found!'));
+                        return next(new errs.ResourceNotFoundError('Catcher with ref ' + catcher_ref + ' is not found!'));
                     }
                 });
             }else {
-                return next(new errs.ResourceNotFoundError('Subscriber with uid ' + subscriber_uid + 'is not found!'));
+                return next(new errs.ResourceNotFoundError('Subscriber with uid ' + subscriber_uid + ' is not found!'));
             }
         });
 }
