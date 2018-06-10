@@ -69,6 +69,7 @@ function getCatchersAllocatedToSubscriber(uid) {
 
 function add(subscriber, subscriberIdPrefix) {
     subscriber.created_at = moment().format('YYYY-MM-DD HH:mm:ss');
+    subscriber.updated_at = moment().format('YYYY-MM-DD HH:mm:ss');
 
     return knex.transaction((t) => {
         return Users()
@@ -188,7 +189,7 @@ function deleteByUserId(id) {
 
 function allocateCatcher(catcher_id, subscriber_id) {
     return CatcherAllocation()
-            .insert({catcher_id: catcher_id, subscriber_id: subscriber_id, created_at: moment().format('YYYY-MM-DD HH:mm:ss')});
+            .insert({catcher_id: catcher_id, subscriber_id: subscriber_id, created_at: moment().format('YYYY-MM-DD HH:mm:ss'), updated_at: moment().format('YYYY-MM-DD HH:mm:ss')});
 }
 
 function updateCatcherAllocation(catcher_id, subscriber_id) {
