@@ -188,7 +188,7 @@ function deleteByUserId(id) {
 
 function allocateCatcher(catcher_id, subscriber_id) {
     return CatcherAllocation()
-            .insert({catcher_id: catcher_id, subscriber_id: subscriber_id});
+            .insert({catcher_id: catcher_id, subscriber_id: subscriber_id, created_at: moment().format('YYYY-MM-DD HH:mm:ss')});
 }
 
 function updateCatcherAllocation(catcher_id, subscriber_id) {
