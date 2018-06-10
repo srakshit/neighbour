@@ -64,6 +64,30 @@ function updateSubscriber(req, res, next) {
         });
 }
 
+function updateSubscriberByUid(req, res, next) {
+    let subscriber = req.swagger.params.subscriber.value;
+    let uid = req.swagger.params.uid.value;
+
+    if (subscriber.postcode) {
+        subscriber.postcode = subscriber.postcode.replace(' ', '');
+    }
+
+    subscriber.uid = uid;
+
+    if (subscriber.phone && new RegExp(/[a-zA-Z]/).test(subscriber.phone)) {
+        return next(new errs.InvalidContentError('phone number can\'t be alphanumeric!'));
+    }
+
+    subscribers.update(subscriber)
+        .then(() => {
+            res.send(204);
+            return next();
+        })
+        .catch((err) => {
+            return next(new errs.InternalError(err.message, 'Failed to create catcher!'));
+        });
+}
+
 function getSubscriberbyId(req, res, next) {
     let id = req.swagger.params.uid.value;
     
@@ -131,6 +155,7 @@ function getSubscriberByEmail(req, res, next) {
 module.exports = {
     addSubscriber: addSubscriber,
     updateSubscriber: updateSubscriber,
+    updateSubscriberByUid: updateSubscriberByUid,
     getSubscriberbyId: getSubscriberbyId,
     getSubscriberByEmail: getSubscriberByEmail
 };

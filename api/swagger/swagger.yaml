@@ -57,6 +57,37 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+    put:
+      summary: Update an existing subscriber
+      operationId: updateSubscriberByUid
+      description: Update an existing subscriber
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: uid
+          required: true
+          description: Subscriber uniqueId
+          type: string
+        - in: body
+          name: subscriber
+          required: true
+          description: Update Subscriber
+          schema:
+            $ref: '#/definitions/UpdateSubscriberByUid'
+      responses:
+        204:
+          description: Subscriber updated
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/SuccessResponse"
+        400:
+          description: Invalid subscriber id provided
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/ErrorResponse"
   /subscribers/email/{email}:
     # binds a127 app logic to a route
     x-swagger-router-controller: registration
@@ -304,6 +335,49 @@ definitions:
         type: string
         format: email
         example: sherlock.holmes@detective.com
+      phone:
+        type: string
+        minLength: 11
+        maxLength: 11
+        example: 0123456789
+      address:
+        type: string
+        minLength: 1
+        example: 221B Baker Steeet
+      city:
+        type: string
+        minLength: 1
+        example: London
+      county:
+        type: string
+        example: Londng Borough
+      postcode:
+        type: string
+        minLength: 6
+        maxLength: 9
+        description: Postcode without spaces
+        example: SW19 01B
+      isActive:
+        type: boolean
+        description: Subscriber status (active/inactive)
+        example: true
+      stripeCustomerId:
+        type: string
+        minLength: 18
+        maxLength: 18
+        description: Subscriber Stripe customer ID
+        example: cus_CjePmBlyXYW03M
+  UpdateSubscriberByUid:
+    type: object
+    properties:
+      firstName:
+        type: string
+        minLength: 1
+        example: Sherlock
+      lastName:
+        type: string
+        minLength: 1
+        example: Holmes
       phone:
         type: string
         minLength: 11

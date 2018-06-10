@@ -118,18 +118,34 @@ function update(subscriber) {
     if (subscriber.stripeCustomerId !== undefined) {
         subscriberObj.stripe_customer_id = subscriber.stripeCustomerId;
     }
-    
+
+    if (subscriber.id) {
+        return getById(subscriber.id)
+            .then((subscriber) => {
+                return updateSubscriber(subscriber.id, userObj, subscriberObj);
+            })
+    }
+
+    if (subscriber.uid) {
+        return getByUid(subscriber.uid)
+            .then((subscriber) => {
+                return updateSubscriber(subscriber.id, userObj, subscriberObj);
+            })
+    } 
+}
+
+function updateSubscriber(user_id, userObj, subscriberObj) {
     if (!_.isEmpty(userObj) && !_.isEmpty(subscriberObj)) {
         //Update both Users and Subscribers table
         return knex.transaction((t) => {
             return Users()
                 .transacting(t)
-                .where('email', subscriber.email)
+                .where('id', user_id)
                 .update(userObj)
                 .then((id) => {
                     return Subscribers()
                         .transacting(t)
-                        .where('subscriber_id', subscriber.id)
+                        .where('user_id', user_id)
                         .update(subscriberObj);
                 })
                 .then(t.commit)
@@ -140,7 +156,7 @@ function update(subscriber) {
         return knex.transaction((t) => {
             return Users()
                 .transacting(t)
-                .where('email', subscriber.email)
+                .where('id', user_id)
                 .update(userObj)
                 .then(t.commit)
                 .catch(t.rollback);
@@ -150,12 +166,12 @@ function update(subscriber) {
         return knex.transaction((t) => {
             return Subscribers()
                 .transacting(t)
-                .where('subscriber_id', subscriber.id)
+                .where('user_id', user_id)
                 .update(subscriberObj)
                 .then(t.commit)
                 .catch(t.rollback);
         });
-    }   
+    }  
 }
 
 function deleteByUserId(id) {
