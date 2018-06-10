@@ -67,7 +67,9 @@ function getCatchersAllocatedToSubscriber(uid) {
                 ,'u2.email');
 }
 
-function add(subscriber, subscriberIdPrefix) {  
+function add(subscriber, subscriberIdPrefix) {
+    subscriber.created_at = moment().format('YYYY-MM-DD HH:mm:ss');
+
     return knex.transaction((t) => {
         return Users()
             .transacting(t)
@@ -85,6 +87,8 @@ function add(subscriber, subscriberIdPrefix) {
 function update(subscriber) {
     let userObj = {};
     let subscriberObj = {};
+
+    userObj.updated_at = moment().format('YYYY-MM-DD HH:mm:ss');
     
     if (subscriber.firstName) {
         userObj.firstName = subscriber.firstName;
@@ -135,7 +139,8 @@ function update(subscriber) {
 }
 
 function updateSubscriber(user_id, userObj, subscriberObj) {
-    if (!_.isEmpty(userObj) && !_.isEmpty(subscriberObj)) {
+
+    if (!_.isEmpty(subscriberObj)) {
         //Update both Users and Subscribers table
         return knex.transaction((t) => {
             return Users()
@@ -151,7 +156,7 @@ function updateSubscriber(user_id, userObj, subscriberObj) {
                 .then(t.commit)
                 .catch(t.rollback);
         });
-    }else if (!_.isEmpty(userObj)){
+    }else {
         //Update Users table only
         return knex.transaction((t) => {
             return Users()
@@ -161,17 +166,7 @@ function updateSubscriber(user_id, userObj, subscriberObj) {
                 .then(t.commit)
                 .catch(t.rollback);
         });
-    }else if (!_.isEmpty(subscriberObj)) {
-        //Update Subscribers table only
-        return knex.transaction((t) => {
-            return Subscribers()
-                .transacting(t)
-                .where('user_id', user_id)
-                .update(subscriberObj)
-                .then(t.commit)
-                .catch(t.rollback);
-        });
-    }  
+    } 
 }
 
 function deleteByUserId(id) {
